@@ -34,17 +34,22 @@ class CarouselManager {
   // 초기 이미지파일 배열 받기
   init(files) {
     this.slides = files;
+    // 슬라이드를 0번으로 다시 세팅
+    this.goToSlide(0);
     // 슬라이드 띄우기
     this.setUpPreview();
   }
 
   // 슬라이드 이미지 렌더링
   setUpPreview() {
+
     // 이미지 트랙 리셋
     this.track.innerHTML = '';
+    // 인디케이터 리셋
+    this.indicatorContainer.innerHTML = '';
 
     // 슬라이드 이미지 생성
-    this.slides.forEach((file, index) => { 
+    this.slides.forEach((file, index) => {
       // 이미지 생성
       const $img = document.createElement('img');
       // raw file을 image url로 변환

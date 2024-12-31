@@ -5,15 +5,30 @@ class CarouselManager {
   constructor(container) {
     // 캐러셀을 감싸는 전체 부모태그
     this.container = container;
+    // 실제 이미지 파일 배열
+    this.slides = [];
+    // 현재 인덱스
+    this.currentIndex = 0;
 
     // 이미지 트랙(실제 이미지가 배치될 공간)
     this.track = this.container.querySelector('.carousel-track');
 
     // 인디케이터 영역
-    this.indicatorContainer = this.container.querySelector('.carousel-indicators');
-    
-    // 실제 이미지 파일 배열
-    this.slides = [];
+    this.indicatorContainer = this.container.querySelector(
+      '.carousel-indicators'
+    );
+
+    // 이전, 다음 슬라이드 버튼
+    this.prevBtn = this.container.querySelector('.carousel-prev');
+    this.nextBtn = this.container.querySelector('.carousel-next');
+
+    // 이벤트 바인딩
+    this.prevBtn.addEventListener('click', (e) => {
+      this.goToSlide(this.currentIndex - 1);
+    });
+    this.nextBtn.addEventListener('click', (e) => {
+      this.goToSlide(this.currentIndex + 1);
+    });
   }
 
   // 초기 이미지파일 배열 받기
@@ -54,6 +69,16 @@ class CarouselManager {
     if (index === 0) $indicator.classList.add('active');
 
     this.indicatorContainer.append($indicator);
+  }
+
+  // 슬라이드 X축 이동함수
+  goToSlide(index) {
+    if (index < 0 || index > this.slides.length - 1) return;
+
+    // 현재 인덱스 갱신
+    this.currentIndex = index;
+    // 트랙 이동
+    this.track.style.transform = `translateX(-${index * 100}%)`;
   }
 
 }

@@ -29,7 +29,7 @@ class CarouselManager {
     this.track.innerHTML = '';
 
     // 슬라이드 이미지 생성
-    this.slides.forEach(file => { 
+    this.slides.forEach((file, index) => { 
       // 이미지 생성
       const $img = document.createElement('img');
       // raw file을 image url로 변환
@@ -43,12 +43,12 @@ class CarouselManager {
       this.track.append($slideDiv);
 
       // 인디케이터 생성
-      this.makeIndicator(index);
+      if (this.slides.length > 1) this.makeIndicator(index);
     });
   }
 
   // 인디케이터 생성하기
-  makeIndicator() {
+  makeIndicator(index) {
     const $indicator = document.createElement('span');
     $indicator.classList.add('indicator');
     if (index === 0) $indicator.classList.add('active');

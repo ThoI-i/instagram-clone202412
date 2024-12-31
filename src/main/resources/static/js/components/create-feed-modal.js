@@ -1,5 +1,3 @@
-
-
 // 피드 생성 모달을 전역관리
 let $modal = document.getElementById('createPostModal');
 
@@ -14,11 +12,14 @@ let elements = {
 // 파일 업로드 관련 이벤트 함수
 function setUpFileUploadEvents() {
   const { $uploadBtn, $fileInput } = elements;
-
   // 업로드 버튼을 누르면 파일선택창이 대신 눌리도록 조작
   $uploadBtn.addEventListener('click', e => $fileInput.click());
+  // 파일 선택이 끝났을 때 파일정보를 읽는 이벤트
+  $fileInput.addEventListener('change', e => {
+    console.log(e.target.files);
+    
+  });
 }
-
 // 피드 생성 모달 관련 이벤트 함수
 function setUpModalEvents() {
 
@@ -44,7 +45,7 @@ function setUpModalEvents() {
     .querySelector('.fa-square-plus')
     .closest('.menu-item')
     .addEventListener('click', openModal);
-  
+
   // X버튼 눌렀을 때
   $closeBtn.addEventListener('click', closeModal);
 

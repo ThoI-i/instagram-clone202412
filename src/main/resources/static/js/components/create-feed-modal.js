@@ -1,4 +1,5 @@
 
+import CarouselManager from "../ui/CarouselManager.js";
 
 // step 모듈내에서 전역관리
 let currentStep = 1;
@@ -73,6 +74,15 @@ function setUpFileUploadEvents() {
       }
       return true;
     });
+
+    // 이미지 슬라이드 생성
+    const step2Carousel = new CarouselManager($modal.querySelector('.preview-container'));
+    step2Carousel.init(validFiles);
+
+    const step3Carousel = new CarouselManager(
+      $modal.querySelector('.write-container')
+    );
+    step3Carousel.init(validFiles);
 
     // 모달 step 2로 이동
     goToStep(2);

@@ -1,0 +1,168 @@
+/* src/main/resources/static/css/suggestions.css */
+
+.suggestions {
+    position: fixed;
+    right: 15%;
+    top: 0;
+    width: 270px;
+    padding: 30px 0 30px 16px;
+}
+
+/* 현재 사용자 프로필 */
+.current-user {
+    margin-bottom: 24px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.suggestions .profile-image {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 12px;
+}
+
+.suggestions .profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.username {
+    color: #262626;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    margin-bottom: 2px;
+}
+
+.name {
+    color: #8e8e8e;
+    font-size: 14px;
+}
+
+.switch-button {
+    border: none;
+    background: none;
+    color: #0095f6;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* 추천 섹션 헤더 */
+.suggestions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 4px 0;
+}
+
+.suggestions-text {
+    color: #8e8e8e;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.see-all-button {
+    border: none;
+    background: none;
+    color: #262626;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* 추천 사용자 목록 */
+.suggestions-list {
+    margin-bottom: 12px;
+}
+
+.suggestion-item {
+    padding: 8px 0;
+}
+
+.suggestion-item .user-profile {
+    padding: 0;
+}
+
+.suggestion-item .profile-image {
+    width: 32px;
+    height: 32px;
+}
+
+.follow-info {
+    color: #8e8e8e;
+    font-size: 12px;
+}
+
+.follow-button {
+    border: none;
+    background: none;
+    color: #0095f6;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.follow-button:hover {
+    color: #00376b;
+}
+
+/* 푸터 */
+.suggestions-footer {
+    margin-top: 24px;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.footer-links a {
+    color: #c7c7c7;
+    font-size: 11px;
+    text-decoration: none;
+    position: relative;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+.footer-links a:not(:last-child)::after {
+    content: "·";
+    margin-left: 8px;
+}
+
+.copyright {
+    color: #c7c7c7;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+/* 반응형 처리 */
+@media (max-width: 1160px) {
+    .suggestions {
+        display: none;
+    }
+}

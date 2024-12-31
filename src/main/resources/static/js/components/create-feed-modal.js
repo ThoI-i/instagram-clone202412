@@ -11,6 +11,14 @@ const elements = {
   $fileInput: $modal.querySelector('#fileInput'),
 };
 
+// 모달 바디 스텝을 이동하는 함수
+function goToStep(step) {
+  // 기존 스텝 컨테이너의 active를 제거하고 해당 step컨테이너에 active부여
+  [...$modal.querySelectorAll('.step')].forEach(($stepContainer, index) => { 
+    $stepContainer.classList.toggle('active', step === index + 1);
+  });
+}
+
 // 파일 업로드 관련 이벤트 함수
 function setUpFileUploadEvents() {
   const { $uploadBtn, $fileInput } = elements;
@@ -38,8 +46,8 @@ function setUpFileUploadEvents() {
       return true;
     });
 
-    console.log(validFiles);
-    
+    // 모달 step 2로 이동
+    goToStep(2);
     
   };
 

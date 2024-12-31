@@ -1,5 +1,8 @@
 
 
+// step 모듈내에서 전역관리
+let currentStep = 1;
+
 // 피드 생성 모달을 전역관리
 const $modal = document.getElementById('createPostModal');
 
@@ -16,6 +19,10 @@ const elements = {
 
 // 모달 바디 스텝을 이동하는 함수
 function goToStep(step) {
+
+  if (step < 1 || step > 3) return;
+
+  currentStep = step;
 
   const { $backStepBtn, $nextStepBtn, $modalTitle } = elements;
 
@@ -85,7 +92,7 @@ function setUpFileUploadEvents() {
 // 피드 생성 모달 관련 이벤트 함수
 function setUpModalEvents() {
 
-  const { $closeBtn, $backdrop } = elements;
+  const { $closeBtn, $backdrop, $backStepBtn, $nextStepBtn } = elements;
 
   // 모달 열기 함수
   const openModal = (e) => {
@@ -113,6 +120,10 @@ function setUpModalEvents() {
 
   // 백드롭 눌렀을 때
   $backdrop.addEventListener('click', closeModal);
+
+  // 모달 이전, 다음 스텝 클릭이벤트
+  $backStepBtn.addEventListener('click', () => goToStep(currentStep - 1));
+  $nextStepBtn.addEventListener('click', () => goToStep(currentStep + 1));
 }
 
 // 이벤트 바인딩 관련 함수

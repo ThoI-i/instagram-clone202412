@@ -123,7 +123,14 @@ function setUpModalEvents() {
 
   // 모달 이전, 다음 스텝 클릭이벤트
   $backStepBtn.addEventListener('click', () => goToStep(currentStep - 1));
-  $nextStepBtn.addEventListener('click', () => goToStep(currentStep + 1));
+  $nextStepBtn.addEventListener('click', () => {
+    if (currentStep < 3) {
+      goToStep(currentStep + 1);
+    } else {
+      alert('서버로 게시물을 공유합니다.');
+      // 차후에 서버 AJAX 통신 구현...
+    }
+  });
 }
 
 // 이벤트 바인딩 관련 함수

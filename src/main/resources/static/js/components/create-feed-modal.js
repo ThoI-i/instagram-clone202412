@@ -8,16 +8,27 @@ let elements = {
   $uploadBtn: $modal.querySelector('.upload-button'),
   $fileInput: $modal.querySelector('#fileInput'),
 };
-
 // 파일 업로드 관련 이벤트 함수
 function setUpFileUploadEvents() {
   const { $uploadBtn, $fileInput } = elements;
+  
+  // 파일을 검사하고 다음 단계로 이동하는 함수
+  const handleFiles = files => { 
+    // 파일의 개수가 10개가 넘는지 검사
+    if (files.length > 3) {
+      alert('최대 3개의 파일만 선택 가능합니다.')
+      return;
+    }
+  };
+
   // 업로드 버튼을 누르면 파일선택창이 대신 눌리도록 조작
   $uploadBtn.addEventListener('click', e => $fileInput.click());
+
   // 파일 선택이 끝났을 때 파일정보를 읽는 이벤트
   $fileInput.addEventListener('change', e => {
-    console.log(e.target.files);
-    
+    // console.log(e.target.files);
+    const files = [...e.target.files];
+    if (files.length > 0) handleFiles(files);    
   });
 }
 // 피드 생성 모달 관련 이벤트 함수

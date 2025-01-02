@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.instagramclone.repository.PostRepository">
+
+    <!-- insert만 특별하게 auto_increment로 지정한 key를 지정해줌   -->
+    <insert id="saveFeed" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO posts
+        (content, writer)
+        VALUES
+        (#{content}, #{writer})
+    </insert>
+
+    <insert id="saveFeedImage" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO post_images
+        (post_id, image_url, image_order)
+        VALUES
+        (#{postId}, #{imageUrl}, #{imageOrder})
+    </insert>
+
+    <select id="findImagesByPostId" resultType="PostImage">
+        SELECT
+        *
+        FROM post_images
+        WHERE post_id = #{postId}
+        ORDER BY image_order
+    </select>
+
+    <select id="findAll" resultType="Post">
+        SELECT
+        *
+        FROM posts
+        ORDER BY create_at DESC
+    </select>
+
+</mapper>

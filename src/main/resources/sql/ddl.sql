@@ -6,12 +6,12 @@ CREATE DATABASE instagram_clone
 -- 게시물 테이블
 CREATE TABLE posts
 (
-    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
-    content    TEXT,
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY, -- BIGINT = LONG(자바)
+    content    TEXT, -- 다량의 문자 저장을 위해 TEXT로
     writer     VARCHAR(100) NOT NULL,
     view_count INT       DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성 시간
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- 수정 시간
 );
 
 -- 게시물 이미지 테이블

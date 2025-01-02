@@ -141,6 +141,7 @@ function setUpFileUploadEvents() {
   $uploadArea.addEventListener('drop', (e) => {
     e.preventDefault(); // 드롭했을 때 이미지 새탭이 열리거나 파일이 다운로드되는 것을 방지
 
+    $uploadArea.classList.remove('dragover');
     // 파일 정보 얻어오기
     const files = [...e.dataTransfer.files];
     // 파일 검증
@@ -206,7 +207,7 @@ function setupTextareaEvents() {
 
   $contentTextarea.addEventListener('input', () => {
     const length = $contentTextarea.value.length;
-    $charCounter.textContent = `${length.toString()} / 2,200`;
+    $charCounter.textContent = `${length.toString()}/2,200`;
 
     if (length > 2200) {
       $charCounter.classList.add('exceed');

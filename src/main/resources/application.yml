@@ -20,7 +20,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
   type-aliases-package: com.example.instagramclone.domain
-  mapper-locations: classpath:mapper/**/*.xml
+  mapper-locations: classpath:mapper/**/*.xml #mapper 하위 폴더
 
 logging:
   level:
@@ -30,4 +30,4 @@ logging:
 
 file:
   upload:
-    location: ${user.home}/instagram/uploads/
+    location: ${user.home}/instagram-clone/uploads/ #저장소 경로

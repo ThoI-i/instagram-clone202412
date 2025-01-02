@@ -30,7 +30,8 @@
         SELECT
         *
         FROM posts
-        ORDER BY create_at DESC
+        ORDER BY
+        created_at DESC, id DESC
     </select>
 
 </mapper>

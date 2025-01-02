@@ -217,13 +217,28 @@ function setupTextareaEvents() {
   });
 }
 
+// 피드 모달 닫을 때 삭제 취소 관련
+function setupNestedModalEvents() {
+  const { $nestedModal, $deleteBtn, $cancelBtn } = elements;
+
+  // 취소처리 - 중첩모달만 닫기
+  $cancelBtn.addEventListener('click', () => { 
+    $nestedModal.style.display = 'none';
+  });
+
+  // 삭제처리 - 모든 모달을 닫고 초기상태로 귀환
+  $deleteBtn.addEventListener('click', () => { 
+    // 새로고침시 모든것이 초기로 돌아감
+    window.location.reload();
+  });
+}
 
 // 이벤트 바인딩 관련 함수
 function bindEvents() {
   setUpModalEvents(); // 모달 관련 이벤트
   setUpFileUploadEvents(); // 파일업로드 관련 이벤트
   setupTextareaEvents(); // 텍스트 입력 관련 이벤트
-
+  setupNestedModalEvents(); // 중첩 모달 관련 이벤트
 }
 
 // 모달 관련 JS 함수 - 외부에 노출

@@ -84,6 +84,17 @@ class CarouselManager {
     this.currentIndex = index;
     // 트랙 이동
     this.track.style.transform = `translateX(-${index * 100}%)`;
+
+    // 이전, 다음 슬라이드 버튼 활성화 여부
+    this.prevBtn.style.display = index === 0 ? 'none' : 'flex';
+    this.nextBtn.style.display = index === this.slides.length - 1 ? 'none' : 'flex';
+
+    // 인디케이터 변화 업데이트
+    const $inticators = [...this.indicatorContainer.children];
+    $inticators.forEach(($ind, i) => { 
+      $ind.classList.toggle('active', i === index);
+    });
+
   }
 
 }

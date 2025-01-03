@@ -29,7 +29,19 @@ const elements = {
   $nestedModal: $modal.querySelector('.nested-modal'),
   $deleteBtn: $modal.querySelector('.delete-button'),
   $cancelBtn: $modal.querySelector('.cancel-button'),
+  $loadingSpinner: $modal.querySelector('.loading-spinner'),
 };
+
+// 로딩 스피너 처리
+function setLoading(loading = false) {
+  const { $loadingSpinner, $backStepBtn, $nextStepBtn } = elements;
+
+  $loadingSpinner.style.display = loading ? 'block' : 'none';
+  $backStepBtn.style.visibility = loading ? 'hidden': 'visible';
+  $nextStepBtn.style.display = loading ? 'none' : 'block';
+
+  $nextStepBtn.disabled = loading;
+}
 
 // API 서버에 피드의 내용과 이미지들을 전송
 async function fetchFeed() {
@@ -55,20 +67,26 @@ async function fetchFeed() {
     formData.append('images', file);
   });
 
-  // 서버에 POST요청 전송
-  const response = await fetch('/api/posts', {
-    method: 'POST',
-    body: formData
-  });
+  setLoading(true); // 로딩 상태 활성화
 
-  const data = await response.json();
+  setTimeout(async () => { 
+    // 서버에 POST요청 전송
+    const response = await fetch('/api/posts', {
+      method: 'POST',
+      body: formData
+    });
   
-  if (response.ok) {
-    window.location.reload(); // 피드 새로고침
-  } else {
-    console.error('failed to request');
-    alert(data.message);
-  }
+    const data = await response.json();
+    
+    if (response.ok) {
+      window.location.reload(); // 피드 새로고침
+    } else {
+      console.error('failed to request');
+      alert(data.message);
+    }
+    setLoading(false);
+    
+  }, 1500);
 
 }
 

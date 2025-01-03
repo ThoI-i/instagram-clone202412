@@ -10,9 +10,18 @@ async function fetchFeeds() {
 }
 
 // 한개의 피드를 렌더링하는 함수
-function createFeedItem(feed) {
+function createFeedItem({ writer, content, images, createdAt }) {
+
+  // const makeImageTags = (images) => { 
+  //   let imgTag = '';
+  //   for (const img of images) {
+  //     imgTag += `<img src="${img.imageUrl}">`;
+  //   }
+  //   return imgTag;
+  // };
+
   return `
-  <article class="post">
+    <article class="post">
       <div class="post-header">
         <div class="post-user-info">
           <div class="post-profile-image">
@@ -21,6 +30,7 @@ function createFeedItem(feed) {
           <div class="post-user-details">
             <a href="#" class="post-username">
                 <!--      작성자 이름 배치      -->
+                ${writer}
             </a>
           </div>
         </div>
@@ -33,8 +43,13 @@ function createFeedItem(feed) {
         <div class="carousel-container">
           <div class="carousel-track">
             <!--     이미지 목록 배치      -->
+            ${images.map(image => `
+                <img src="${image.imageUrl}" alt="feed image${image.imageOrder}">
+              `).join('')}
           </div>
-          ${feed.images.length > 1 ? `
+          ${
+            images.length > 1
+              ? `
             <button class="carousel-prev">
               <i class="fa-solid fa-chevron-left"></i>
             </button>
@@ -43,8 +58,13 @@ function createFeedItem(feed) {
             </button>
             <div class="carousel-indicators">
                 <!--        인디케이터 렌더링        -->
+                ${images.map((_, i) => `
+                  <span class="indicator ${i === 0 ? 'active': ''}"></span>
+                `).join('')}
             </div>
-          ` : ''}
+          `
+              : ''
+          }
         </div>
       </div>
       
@@ -74,9 +94,11 @@ function createFeedItem(feed) {
       <div class="post-content">
         <div class="post-text">
             <!--     피드 내용     -->
+            ${content}
         </div>
         <div class="post-time">
             <!--      피드 생성 시간      -->
+            ${createdAt}
         </div>
       </div>
       
@@ -95,12 +117,9 @@ function createFeedItem(feed) {
 async function renderFeed() {
   // 피드 데이터를 서버로부터 불러오기
   const feedList = await fetchFeeds();
-  console.log(feedList[0]);
 
   // feed html 생성
-  const feedhtml = createFeedItem(feedList[0]);
-
-  $feedContainer.innerHTML = feedhtml;
+  $feedContainer.innerHTML = feedList.map((feed) => createFeedItem(feed)).join('');
 }
 
 // 외부에 노출시킬 피드관련 함수

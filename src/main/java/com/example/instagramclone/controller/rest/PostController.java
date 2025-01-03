@@ -36,10 +36,10 @@ public class PostController {
         log.info("feed create request: POST - {}", postCreate);
 
         // 이미지와 JSON을 서비스클래스로 전송
-        postService.createFeed(postCreate);
+        Long postId = postService.createFeed(postCreate);
 
         return ResponseEntity
                 .ok()
-                .body(null);
+                .body("success to create feed : id - " + postId);
     }
 }

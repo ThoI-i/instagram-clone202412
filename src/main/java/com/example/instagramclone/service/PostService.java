@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -26,38 +27,14 @@ public class PostService {
 
     // 피드 목록조회 중간처리
     public List<PostResponse> findAllFeeds() {
-
         // 전체 피드 조회
-        List<Post> feedList = postRepository.findAll();
-        // 이미지 같이 조회
-        List<PostResponse> responseList = new ArrayList<>();
-        for (Post feed : feedList) {
-            List<PostImage> imageList = postRepository.findImagesByPostId(feed.getId());
-
-            // 이미지 리스트를 DTO로 변환
-            List<PostImageResponse> imageResponseList = new ArrayList<>();
-            for (PostImage postImage : imageList) {
-                PostImageResponse imageResponse = PostImageResponse.builder()
-                        .id(postImage.getId())
-                        .imageUrl(postImage.getImageUrl())
-                        .imageOrder(postImage.getImageOrder())
-                        .build();
-                imageResponseList.add(imageResponse);
-            }
-
-            PostResponse response = PostResponse.builder()
-                    .id(feed.getId())
-                    .writer(feed.getWriter())
-                    .content(feed.getContent())
-                    .images(imageResponseList)
-                    .createdAt(feed.getCreatedAt())
-                    .updatedAt(feed.getUpdatedAt())
-                    .build();
-
-            responseList.add(response);
-        }
-
-        return responseList;
+        return postRepository.findAll()
+                .stream()
+                .map(feed -> {
+                    feed.setImages(postRepository.findImagesByPostId(feed.getId()));
+                    return PostResponse.from(feed);
+                })
+                .collect(Collectors.toList());
     }
 
 

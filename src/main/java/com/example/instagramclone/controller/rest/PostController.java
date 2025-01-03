@@ -32,6 +32,7 @@ public class PostController {
             log.info("uploaded image file name - {}", image.getOriginalFilename());
         });
 
+        postCreate.setImages(images);
         log.info("feed create request: POST - {}", postCreate);
 
         // 이미지와 JSON을 서비스클래스로 전송

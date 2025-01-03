@@ -1,6 +1,8 @@
 package com.example.instagramclone.controller.rest;
 
 import com.example.instagramclone.domain.post.dto.request.PostCreate;
+import com.example.instagramclone.domain.post.dto.response.PostResponse;
+import com.example.instagramclone.domain.post.entity.Post;
 import com.example.instagramclone.exception.ErrorCode;
 import com.example.instagramclone.exception.PostException;
 import com.example.instagramclone.service.PostService;
@@ -21,6 +23,16 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
+
+    // 피드 목록 조회 요청
+    @GetMapping
+    public ResponseEntity<?> getFeeds() {
+        List<PostResponse> allFeeds = postService.findAllFeeds();
+
+        return ResponseEntity
+                .ok()
+                .body(allFeeds);
+    }
 
     // 피드 생성 요청
     @PostMapping

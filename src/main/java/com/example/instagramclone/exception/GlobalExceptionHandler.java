@@ -57,5 +57,23 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    // 피드 관련 예외처리
+    @ExceptionHandler(PostException.class)
+    public ResponseEntity<?> handlePostException(PostException e, HttpServletRequest request) {
+        log.error("PostException occurred: {}", e.getMessage(), e);
+
+        ErrorResponse response = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(e.getErrorCode().getStatus().value())
+                .error(e.getErrorCode().name())
+                .message(e.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity
+                .status(e.getErrorCode().getStatus())
+                .body(response);
+    }
+
 
 }

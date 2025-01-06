@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.instagramclone.repository.HashtagRepository">
+
+    <insert id="insertHashtag" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO hashtags
+        (name)
+        VALUES
+        (#{name})
+    </insert>
+
+    <insert id="insertPostHashtag" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO post_hashtags
+        (post_id, hashtag_id)
+        VALUES
+        (#{postId}, #{hashtagId})
+    </insert>
+
+    <select id="findByName" resultType="Hashtag">
+        SELECT
+        h.id
+        , h.name
+        , h.created_at
+        FROM hashtags h
+        WHERE name = #{name}
+    </select>
+
+</mapper>

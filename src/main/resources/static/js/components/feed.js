@@ -11,6 +11,35 @@ async function fetchFeeds() {
   return await response.json();
 }
 
+
+// 피드의 날짜를 조작
+function formatDate(dateString) {
+  // 날짜문자열을 날짜객체로 변환
+  const date = new Date(dateString);
+
+  // 현재시간을 구함
+  const now = new Date();
+
+  // 두 시간 사이 값을 구함
+  const diff = Math.floor((now - date) / 1000);
+
+  if (diff < 60) return '방금 전';
+  if (diff < 60 * 60) return `${Math.floor(diff / 60)}분 전`;
+  if (diff < 60 * 60 * 24) return `${Math.floor(diff / (60 * 60))}시간 전`;
+  if (diff < 60 * 60 * 24 * 7) return `${Math.floor(diff / (60 * 60 * 24))}일 전`;
+
+  return new Intl.DateTimeFormat(
+    'ko-KR', 
+    {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }
+  ).format(date);
+  
+}
+
+
 // 한개의 피드를 렌더링하는 함수
 function createFeedItem({ writer, content, images, createdAt }) {
 
@@ -100,7 +129,7 @@ function createFeedItem({ writer, content, images, createdAt }) {
         </div>
         <div class="post-time">
             <!--      피드 생성 시간      -->
-            ${createdAt}
+            ${formatDate(createdAt)}
         </div>
       </div>
       

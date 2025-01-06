@@ -1,4 +1,6 @@
 
+import CarouselManager from "../ui/CarouselManager.js";
+
 // 피드가 들어갈 전체영역
 const $feedContainer = document.querySelector('.feed-container');
 
@@ -120,6 +122,25 @@ async function renderFeed() {
 
   // feed html 생성
   $feedContainer.innerHTML = feedList.map((feed) => createFeedItem(feed)).join('');
+
+  // 각 피드의 이미지 슬라이드에 각각 캐러셀 객체를 적용
+  // 1. 피드의 모든 캐러셀 컨테이너를 가져옴
+  const $caroulselContainerList = [...document.querySelectorAll('.carousel-container')];
+
+  // 2. 각각 캐러셀매니저를 걸어줌
+  $caroulselContainerList.forEach($carousel => { 
+    
+    // 이미지가 단 한개인 슬라이드에서는 이전, 다음버튼이 없어서 에러가 나는 상황
+    const $images = [...$carousel.querySelectorAll('.carousel-track img')];
+
+    // 이미지가 2개 이상인 슬라이드만 캐러셀 생성
+    if ($images.length >= 2) {
+      const carouselManager = new CarouselManager($carousel);
+      // 3. 초기 이미지파일 리스트를 보내줘야 함
+      // - 현재 렌더링이 모두 되어있는 상황: 이벤트만 걸어주면 되는 상황
+      carouselManager.initWithImgTag($images);
+    }
+  });
 }
 
 // 외부에 노출시킬 피드관련 함수

@@ -40,6 +40,12 @@ class CarouselManager {
     this.setUpPreview();
   }
 
+  // 이미지파일 대신 이미지태그를 받아 이벤트처리만 수행하는 함수
+  initWithImgTag($images) {
+    this.slides = $images;
+    this.goToSlide(0);
+  }
+
   // 슬라이드 이미지 렌더링
   setUpPreview() {
 
@@ -90,8 +96,8 @@ class CarouselManager {
     this.nextBtn.style.display = index === this.slides.length - 1 ? 'none' : 'flex';
 
     // 인디케이터 변화 업데이트
-    const $inticators = [...this.indicatorContainer.children];
-    $inticators.forEach(($ind, i) => { 
+    const $indicators = [...this.indicatorContainer.children];
+    $indicators.forEach(($ind, i) => { 
       $ind.classList.toggle('active', i === index);
     });
 

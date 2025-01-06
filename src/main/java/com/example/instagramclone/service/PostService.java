@@ -49,8 +49,21 @@ public class PostService {
 
         processImages(postCreate.getImages(), postId);
 
+        // 해시태그 관련 처리를 수행
+        processHashtags(post);
+
         // 컨트롤러에게 결과 반환
         return postId;
+    }
+
+    // 해시태그 관련 처리 메서드
+    private void processHashtags(Post post) {
+        // 1. 피드 내용에서 해시태그들을 모두 추출 (중복없이)
+
+        // 2. 해시태그들이 최초등장한 해시태그면 데이터베이스에 저장
+        //  단, 이미 존재하는 해시태그라면 기존의 해시태그를 조회해서 가져옴
+
+        // 3. 해시태그와 피드를 연결해서 연결테이블에 저장
     }
 
     private void processImages(List<MultipartFile> images, Long postId) {

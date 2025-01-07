@@ -11,6 +11,15 @@ async function fetchFeeds() {
   return await response.json();
 }
 
+// 해시태그만 추출해서 링크로 감싸기
+function convertHashtagsToLinks(content) {
+  // #으로 시작하고 공백이나 줄바꿈으로 끝나는 문자열 찾기
+  return content.replace(
+    /#[\w가-힣]+/g,
+    (match) => `<a href="#" class="hashtag">${match}</a>`
+  );
+}
+
 
 // 피드의 날짜를 조작
 function formatDate(dateString) {
@@ -45,7 +54,7 @@ function truncateContent(writer, content, maxLength = 20) {
   if (content.length <= maxLength) {
     return `
       <a href="#" class="post-username">${writer}</a>
-      <span class="post-caption">${content}</span>
+      <span class="post-caption">${convertHashtagsToLinks(content)}</span>
     `;
   }
 
@@ -55,8 +64,8 @@ function truncateContent(writer, content, maxLength = 20) {
   return `
     <a href="#" class="post-username">${writer}</a>
     <span class="post-caption post-caption-truncated">
-      <span class="truncated-text">${truncatedContent}...</span>
-      <span class="full-text" style="display: none;">${content}</span>
+      <span class="truncated-text">${convertHashtagsToLinks(truncatedContent)}...</span>
+      <span class="full-text" style="display: none;">${convertHashtagsToLinks(content)}</span>
     </span>
     <button class="more-button">더 보기</button>
   `;

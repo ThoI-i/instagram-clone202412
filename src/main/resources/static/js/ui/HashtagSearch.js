@@ -32,6 +32,12 @@ class HashtagSearch {
 
   // 서버에 검색요청을 보내는 함수
   async fetchHashtagSearch(keyword) {
+
+    // 키워드가없으면 서버통신 보내지마
+    if (!keyword) {
+      return;
+    }
+
     const response = await fetch(`/api/hashtags/search?keyword=${keyword}`);
     const hashtags = await response.json();
     // console.log(hashtags);
@@ -42,6 +48,13 @@ class HashtagSearch {
 
   // 서버에서 가져온 해시태그 화면에 렌더링하기
   renderSuggestions(hashtags) {
+
+    // 검색결과가 없다면 컨테이너 숨기기
+    if (!hashtags || !hashtags.length) {
+      this.hideSuggestions();
+      return;
+    }
+
     // HTML 문자열로 각 해시태그 아이템을 구성하여 삽입
     this.$suggestionContainer.innerHTML = hashtags
       .map(
@@ -58,6 +71,11 @@ class HashtagSearch {
 
     // 생성된 목록을 보여주기
     this.$suggestionContainer.style.display = 'block';
+  }
+
+  // 해시태그 추천 컨테이너 숨기기
+  hideSuggestions() {
+    this.$suggestionContainer.style.display = 'none';
   }
 
   /**

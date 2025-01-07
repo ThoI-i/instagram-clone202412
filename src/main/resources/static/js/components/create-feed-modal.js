@@ -64,21 +64,21 @@ async function fetchFeed() {
   })); // JSON 넣기
 
   // 이미지 전송
-  selectedFiles.forEach(file => { 
+  selectedFiles.forEach(file => {
     formData.append('images', file);
   });
 
   setLoading(true); // 로딩 상태 활성화
 
-  setTimeout(async () => { 
+  setTimeout(async () => {
     // 서버에 POST요청 전송
     const response = await fetch('/api/posts', {
       method: 'POST',
       body: formData
     });
-  
+
     const data = await response.json();
-    
+
     if (response.ok) {
       window.location.reload(); // 피드 새로고침
     } else {
@@ -86,7 +86,7 @@ async function fetchFeed() {
       alert(data.message);
     }
     setLoading(false);
-    
+
   }, 1500);
 
 }
@@ -289,12 +289,12 @@ function setupNestedModalEvents() {
   const { $nestedModal, $deleteBtn, $cancelBtn } = elements;
 
   // 취소처리 - 중첩모달만 닫기
-  $cancelBtn.addEventListener('click', () => { 
+  $cancelBtn.addEventListener('click', () => {
     $nestedModal.style.display = 'none';
   });
 
   // 삭제처리 - 모든 모달을 닫고 초기상태로 귀환
-  $deleteBtn.addEventListener('click', () => { 
+  $deleteBtn.addEventListener('click', () => {
     // 새로고침시 모든것이 초기로 돌아감
     window.location.reload();
   });

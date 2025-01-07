@@ -7,6 +7,9 @@ class HashtagSearch {
 
     // 검색결과를 표시할 컨테이너를 생성
     this.$suggestionContainer = this.createContainer();
+
+    // 디바운스를 위한 타이머변수
+    this.searchTimeout = null;
   }
 
   // textarea에 input이벤트 걸기
@@ -24,8 +27,12 @@ class HashtagSearch {
       const hastagMatch = this.findHashtagAtCursor(text, currentCursorPosition);
 
       if (hastagMatch) {
-        // 서버에 검색요청 보내기
-        this.fetchHashtagSearch(hastagMatch.keyword);
+        // 서버에 검색요청 보내기 - 디바운스 적용
+        clearTimeout(this.searchTimeout);
+
+        this.searchTimeout = setTimeout(() => { 
+          this.fetchHashtagSearch(hastagMatch.keyword);
+        }, 700);
       }
     });
   }

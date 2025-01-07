@@ -419,3 +419,52 @@
     color: #262626;
     font-weight: 400;
 }
+
+/* 해시태그 관련 */
+.content-input {
+    position: relative;
+    padding: 10px 14px;
+}
+
+.hashtag-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000; /* 상위 z-index 설정 */
+    display: none;
+}
+
+.hashtag-item {
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.hashtag-item:hover {
+    background-color: #fafafa;
+}
+
+.hashtag-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.hashtag-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #262626;
+}
+
+.post-count {
+    font-size: 12px;
+    color: #8e8e8e;
+}

@@ -1,5 +1,6 @@
 
 import CarouselManager from "../ui/CarouselManager.js";
+import HashtagSearch from "../ui/HashtagSearch.js";
 
 // step 모듈내에서 전역관리
 let currentStep = 1;
@@ -299,12 +300,21 @@ function setupNestedModalEvents() {
   });
 }
 
+
+// 해시태그 추천 처리
+function setupSuggestionHashtag() {
+  // 해시태그 모듈을 분리해서 처리
+  const hashtagSearch = new HashtagSearch(elements.$contentTextarea);
+  hashtagSearch.init();
+}
+
 // 이벤트 바인딩 관련 함수
 function bindEvents() {
   setUpModalEvents(); // 모달 관련 이벤트
   setUpFileUploadEvents(); // 파일업로드 관련 이벤트
   setupTextareaEvents(); // 텍스트 입력 관련 이벤트
   setupNestedModalEvents(); // 중첩 모달 관련 이벤트
+  setupSuggestionHashtag(); // 해시태그 추천관련 이벤트
 }
 
 // 모달 관련 JS 함수 - 외부에 노출

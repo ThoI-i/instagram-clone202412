@@ -1,0 +1,20 @@
+/* src/main/resources/static/css/auth/components/separator.css */
+/* 구분선 컴포넌트 스타일 */
+.auth-separator {
+  display: flex;
+  align-items: center;
+  margin: 10px 0 18px;
+}
+
+.separator-line {
+  flex: 1;
+  height: 1px;
+  background-color: #dbdbdb;
+}
+
+.separator-text {
+  color: #737373;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 18px;
+}

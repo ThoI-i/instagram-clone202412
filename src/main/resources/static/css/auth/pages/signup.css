@@ -1,0 +1,60 @@
+
+/* src/main/resources/static/css/auth/signup.css */
+/* src/main/resources/static/css/auth/pages/signup.css */
+@import '../components/layout.css';
+@import '../components/card.css';
+@import '../components/form.css';
+@import '../components/separator.css';
+@import '../components/app-download.css';
+/* 회원가입 페이지 특화 스타일 */
+.signup-text {
+    color: #737373;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 20px;
+    margin: 0 40px 10px;
+    text-align: center;
+}
+.facebook-button {
+    width: 100%;
+    padding: 7px 16px;
+    background-color: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 8px 0;
+}
+.facebook-icon {
+    /* Facebook 아이콘 스타일 */
+    width: 16px;
+    height: 16px;
+    background-image: url('/images/auth/facebook-icon.png');
+    background-size: contain;
+}
+.privacy-text {
+    color: #737373;
+    font-size: 12px;
+    line-height: 16px;
+    margin: 10px 0;
+    text-align: center;
+}
+.privacy-text a {
+    color: #385185;
+    text-decoration: none;
+}
+.login-card p {
+    font-size: 14px;
+    margin: 15px;
+}
+.login-card a {
+    color: #0095f6;
+    text-decoration: none;
+    font-weight: 600;
+}

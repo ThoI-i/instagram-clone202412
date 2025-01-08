@@ -1,0 +1,21 @@
+/* src/main/resources/static/css/auth/components/app-download.css */
+/* 앱 다운로드 섹션 스타일 */
+.app-download {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.app-download p {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.app-download-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.app-download-buttons img {
+  height: 35px;
+}

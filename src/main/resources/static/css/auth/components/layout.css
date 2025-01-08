@@ -1,0 +1,42 @@
+/* src/main/resources/static/css/auth/components/layout.css */
+/* 인증 페이지의 레이아웃 관련 스타일 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.auth-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #fff;
+  padding: 20px;
+}
+
+.auth-image {
+  display: none;
+  width: 28%;
+}
+
+.auth-image img {
+  width: 100%;
+}
+
+.auth-form-container {
+  max-width: 350px;
+  width: 100%;
+}
+
+/* 반응형 */
+@media (min-width: 876px) {
+  .auth-image {
+      display: block;
+      margin-right: 32px;
+  }
+
+  .auth-form-container {
+      margin-top: 12px;
+  }
+}

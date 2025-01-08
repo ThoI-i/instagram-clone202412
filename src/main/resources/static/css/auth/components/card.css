@@ -1,0 +1,19 @@
+/* src/main/resources/static/css/auth/components/card.css */
+/* 카드 컴포넌트 스타일 */
+.auth-card {
+  background-color: white;
+  border: 1px solid #dbdbdb;
+  border-radius: 1px;
+  padding: 20px 40px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.instagram-logo {
+  font-family: 'Instagram Sans Script', cursive;
+  font-size: 36px;
+  margin: 22px auto 12px;
+}
+.instagram-logo svg {
+  width: 60%;
+  height: 100%;
+}

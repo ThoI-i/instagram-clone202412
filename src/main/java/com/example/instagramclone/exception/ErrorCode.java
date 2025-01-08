@@ -21,6 +21,13 @@ public enum ErrorCode {
     // 해시태그 검색관련
     INVALID_HASHTAG_SEARCH(HttpStatus.BAD_REQUEST, "잘못된 해시태그 검색 요청입니다."),
 
+    // 회원 관련 에러
+    INVALID_SIGNUP_DATA(HttpStatus.BAD_REQUEST, "잘못된 회원가입 데이터입니다."),
+    DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다."),
+    DUPLICATE_PHONE(HttpStatus.CONFLICT, "이미 사용 중인 전화번호입니다."),
+    DUPLICATE_USERNAME(HttpStatus.CONFLICT, "이미 사용 중인 사용자 이름입니다."),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다."),
+
     ;
 
     private final HttpStatus status;

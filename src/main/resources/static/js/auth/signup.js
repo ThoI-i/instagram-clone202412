@@ -73,11 +73,25 @@ function validateField($input) {
   const fieldName = $input.name;
   // 입력값 읽어오기
   const inputValue = $input.value;
+  // input의 부모 가져오기
+  const $formField = $input.closest('.form-field');
 
   if (!inputValue) {
-    console.log(fieldName, ' is empty!');
+    // console.log(fieldName, ' is empty!');
+    showError($formField, '필수 입력입니다.'); // 에러메시지 렌더링
   }
 
+}
+
+/**
+ * 에러 메시지를 표시하고, 필드에 error 클래스를 부여
+ */
+function showError($formField, message) {
+  $formField.classList.add('error');
+  const $errorSpan = document.createElement('span');
+  $errorSpan.classList.add('error-message');
+  $errorSpan.textContent = message;
+  $formField.append($errorSpan);
 }
 
 

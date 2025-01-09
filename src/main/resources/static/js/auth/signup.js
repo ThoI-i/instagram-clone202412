@@ -1,4 +1,7 @@
 
+import { ValidationRules } from "./validation.js";
+
+
 // 회원 가입정보를 서버에 전송하기
 async function fetchToSignUp(userData) {
 
@@ -78,7 +81,7 @@ function validateField($input) {
 
   if (!inputValue) {
     // console.log(fieldName, ' is empty!');
-    showError($formField, '필수 입력입니다.'); // 에러메시지 렌더링
+    showError($formField, ValidationRules[fieldName]?.requiredMessage); // 에러메시지 렌더링
   }
 
 }

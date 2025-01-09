@@ -93,6 +93,8 @@ function validateField($input) {
       validateEmailOrPhone($formField, inputValue);
     } else if (fieldName === 'password') {
       validatePassword($formField, inputValue);
+    } else if (fieldName === 'username') {
+      validateUsername($formField, inputValue);
     }
   }
 
@@ -184,6 +186,20 @@ function showPasswordFeedback($formField, message, type) {
   $feedback.textContent = message;
   $formField.append($feedback);
 }
+
+/**
+ * 사용자 이름(username) 필드 검증
+ */
+function validateUsername($formField, inputValue) {
+
+  if (!ValidationRules.username.pattern.test(inputValue)) {
+    showError($formField, ValidationRules.username.message);
+  }
+
+  // 중복검사
+
+}
+
 
 //====== 메인 실행 코드 ======//
 document.addEventListener('DOMContentLoaded', initSignUp);

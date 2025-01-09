@@ -1,6 +1,14 @@
+
 import { ValidationRules, checkPasswordStrength } from "./validation.js";
 import { debounce } from '../util/debounce.js';
 
+// 모든 input별로 이전 값을 저장할 객체를 만듦
+const previousValues = {
+  emailOrPhone: '',
+  name: '',
+  username: '',
+  password: ''
+};
 
 // 회원 가입정보를 서버에 전송하기
 async function fetchToSignUp(userData) {
@@ -20,14 +28,12 @@ async function fetchToSignUp(userData) {
 
 // 초기화 함수
 function initSignUp() {
-
   // form submit이벤트
   const $form = document.querySelector('.auth-form');
 
   // 초기에 가입 버튼 비활성화
   const $submitButton = $form.querySelector('.auth-button');
   $submitButton.disabled = true;
-  
   // 입력 태그들을 읽어서 객체로 관리
   const $inputs = {
     emailOrPhone: $form.querySelector('input[name="email"]'),
@@ -38,50 +44,60 @@ function initSignUp() {
 
   // 비밀번호 숨기기 토글 활성화
   createPasswordToggle($inputs.password);
+
   // 디바운스가 걸린 validateField 함수
-  const debouncedValidate = debounce(($input) => {
-    validateField($input);
+  const debouncedValidate = debounce(async ($input) => {
+    await validateField($input); // 가입버튼 활성화코드는 이 코드 이후에 실행해야 함
     updateSubmitButton($inputs, $submitButton); // 가입 버튼 활성화/비활성화 처리
   }, 700);
 
+  // input 이벤트 핸들러
   const handleInput = ($input) => {
     removeErrorMessage($input.closest('.form-field'));
-    debouncedValidate($input); // 입력값 검증 함수 호출
+    // 디바운스 + 비동기 검증
+    debouncedValidate($input);
+  };
+  const handleBlur = $input => { 
+    const fieldName = $input.name;
+    const currentValue = $input.value.trim();
+    // 빈값이거나 값이 바뀐 적이 있을 때만 혹은 이전 값이랑 달라졌을 때만 검증
+    if (!currentValue || previousValues[fieldName] !== currentValue) {
+      previousValues[fieldName] = currentValue; // 이전 값 갱신
+      removeErrorMessage($input.closest('.form-field'));
+      // 디바운스가 아니라, blur 시점에는 바로 검증할 수도 있음
+      validateField($input);
+      updateSubmitButton($inputs, $submitButton);
+    }
   };
 
   // 4개의 입력창에 입력 이벤트 바인딩
-  Object.values($inputs).forEach($input => { 
+  Object.values($inputs).forEach(($input) => {
     $input.addEventListener('input', () => handleInput($input));
-    // $input.addEventListener('blur', () => handleInput($input));
+    $input.addEventListener('blur', () => handleBlur($input));
   });
 
-
   // 폼 이벤트 핸들러 바인딩
-  $form.addEventListener('submit', e => {
+  $form.addEventListener('submit', (e) => {
     e.preventDefault(); // 폼 전송시 발생하는 새로고침 방지
 
-    // 사용자가 입력한 모든 입력값 읽어오기
-    const emailOrPhone = document.querySelector('input[name="email"]').value;
-    const name = document.querySelector('input[name="name"]').value;
-    const username = document.querySelector('input[name="username"]').value;
-    const password = document.querySelector('input[name="password"]').value;
+    const { emailOrPhone, name, username, password } = $inputs;
+
     const payload = {
-      emailOrPhone: emailOrPhone,
-      name: name,
-      username: username,
-      password: password,
+      emailOrPhone: emailOrPhone.value,
+      name: name.value,
+      username: username.value,
+      password: password.value,
     };
 
     // 서버로 데이터 전송
     fetchToSignUp(payload);
-
   });
-
 }
 
 // ==== 함수 정의 ==== //
 // 입력값을 검증하고 에러메시지를 렌더링하는 함수
 async function validateField($input) {
+
   // 각 입력들이 유효한지 확인
   let isValid = true;
 
@@ -113,6 +129,7 @@ async function validateField($input) {
 
   // 각 input에 검사결과를 저장
   $input.dataset.isValid = isValid.toString();
+
 }
 
 /**
@@ -240,20 +257,25 @@ async function validateUsername($formField, inputValue) {
   }
   return true;
 }
+
 /**
  * 비밀번호 표시/숨기기 토글 기능 생성
  */
 function createPasswordToggle(passwordInput) {
+
   const $toggle = document.querySelector('.password-toggle');
+
   passwordInput.addEventListener('input', (e) => {
     $toggle.style.display = e.target.value.length > 0 ? 'block' : 'none';
   });
+
   $toggle.addEventListener('click', () => {
     const isCurrentlyPassword = passwordInput.type === 'password';
     passwordInput.type = isCurrentlyPassword ? 'text' : 'password';
     $toggle.textContent = isCurrentlyPassword ? '숨기기' : '패스워드 표시';
   });
 }
+
 /**
  * 모든 필드의 유효성 상태를 확인해, 회원가입 버튼 활성/비활성 제어
  */
@@ -262,6 +284,7 @@ function updateSubmitButton($inputs, $submitButton) {
     return input.value.trim() !== '' && input.dataset.isValid === 'true';
   });
   console.log('all: ', allFieldsValid);
+
   $submitButton.disabled = !allFieldsValid;
 }
 

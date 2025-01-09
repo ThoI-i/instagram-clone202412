@@ -122,15 +122,25 @@ function removeErrorMessage($formField) {
   if (feedback) feedback.remove();
 }
 
+// 서버에 중복체크 API 요청을 보내고 결과를 반환
+async function fetchToCheckDuplicate(type, value) {
+  const response = await fetch(`/api/auth/check-duplicate?type=${type}&value=${value}`);
+  return await response.json();
+  
+}
+
 // 이메일 또는 전화번호를 상세검증
-function validateEmailOrPhone($formField, inputValue) {
+async function validateEmailOrPhone($formField, inputValue) {
 
   // 이메일 체크
   if (inputValue.includes('@')) {
     if (!ValidationRules.email.pattern.test(inputValue)) { // 패턴 체크
       showError($formField, ValidationRules.email.message);
     } else { // 서버에 통신해서 중복체크
-
+      const data = await fetchToCheckDuplicate('email', inputValue);
+      if (!data.available) {
+        showError($formField, data.message);
+      }
     }
   } else {
     // 전화번호  체크
@@ -141,6 +151,10 @@ function validateEmailOrPhone($formField, inputValue) {
       showError($formField, ValidationRules.phone.message);
     } else {
       // 서버에 통신해서 중복체크
+      const data = await fetchToCheckDuplicate('phone', numbers);
+      if (!data.available) {
+        showError($formField, data.message);
+      }
     }
   }
 
@@ -190,14 +204,17 @@ function showPasswordFeedback($formField, message, type) {
 /**
  * 사용자 이름(username) 필드 검증
  */
-function validateUsername($formField, inputValue) {
+async function validateUsername($formField, inputValue) {
 
   if (!ValidationRules.username.pattern.test(inputValue)) {
     showError($formField, ValidationRules.username.message);
   }
 
   // 중복검사
-
+  const data = await fetchToCheckDuplicate('username', inputValue);
+  if (!data.available) {
+    showError($formField, data.message);
+  }
 }
 
 

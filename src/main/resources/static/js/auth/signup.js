@@ -19,11 +19,12 @@ async function fetchToSignUp(userData) {
     body: JSON.stringify(userData)
   });
 
-  const data = await response.json();
-
   // alert(data.message);
-  window.location.href = '/'; // 로그인 페이지 이동
+  if (response.ok) window.location.href = '/'; // 로그인 페이지 이동
+  else alert(data.message);
 }
+
+
 
 
 // 초기화 함수
@@ -34,6 +35,7 @@ function initSignUp() {
   // 초기에 가입 버튼 비활성화
   const $submitButton = $form.querySelector('.auth-button');
   $submitButton.disabled = true;
+
   // 입력 태그들을 읽어서 객체로 관리
   const $inputs = {
     emailOrPhone: $form.querySelector('input[name="email"]'),
@@ -47,6 +49,14 @@ function initSignUp() {
 
   // 디바운스가 걸린 validateField 함수
   const debouncedValidate = debounce(async ($input) => {
+    // === bug fix part ===
+    /*
+      원인: validateField는 비동기(async)로 작동함 
+            따라서 await을 걸지 않으면 아래쪽 함수 updateSubmitButton과 동시에 작동되어
+            버그가 발생함
+      해결 방안: validateField에 await을 걸어 실행이 끝날때까지 updateSubmitButton이
+             호출되지 않고 대기하도록 만들어줌
+    */
     await validateField($input); // 가입버튼 활성화코드는 이 코드 이후에 실행해야 함
     updateSubmitButton($inputs, $submitButton); // 가입 버튼 활성화/비활성화 처리
   }, 700);
@@ -54,16 +64,20 @@ function initSignUp() {
   // input 이벤트 핸들러
   const handleInput = ($input) => {
     removeErrorMessage($input.closest('.form-field'));
+
     // 디바운스 + 비동기 검증
     debouncedValidate($input);
   };
+
   const handleBlur = $input => { 
     const fieldName = $input.name;
     const currentValue = $input.value.trim();
+
     // 빈값이거나 값이 바뀐 적이 있을 때만 혹은 이전 값이랑 달라졌을 때만 검증
     if (!currentValue || previousValues[fieldName] !== currentValue) {
       previousValues[fieldName] = currentValue; // 이전 값 갱신
       removeErrorMessage($input.closest('.form-field'));
+
       // 디바운스가 아니라, blur 시점에는 바로 검증할 수도 있음
       validateField($input);
       updateSubmitButton($inputs, $submitButton);
@@ -122,9 +136,7 @@ async function validateField($input) {
       isValid = validatePassword($formField, inputValue);
     } else if (fieldName === 'username') {
       isValid = await validateUsername($formField, inputValue);
-    } else {
-      isValid = true;
-    }
+    } 
   }
 
   // 각 input에 검사결과를 저장

@@ -28,15 +28,15 @@ function initSignUp() {
     password: $form.querySelector('input[name="password"]'),
   };
 
+  const handleInput = ($input) => {
+    removeErrorMessage($input.closest('.form-field'));
+    validateField($input); // 입력값 검증 함수 호출
+  };
 
   // 4개의 입력창에 입력 이벤트 바인딩
   Object.values($inputs).forEach($input => { 
-    $input.addEventListener('input', e => { 
-      validateField($input); // 입력값 검증 함수 호출
-    });
-    $input.addEventListener('blur', (e) => {
-      validateField($input); // 입력값 검증 함수 호출
-    });
+    $input.addEventListener('input', () => handleInput($input));
+    $input.addEventListener('blur', () => handleInput($input));
   });
 
 
@@ -94,6 +94,14 @@ function showError($formField, message) {
   $formField.append($errorSpan);
 }
 
+/**
+ * 에러 및 비밀번호 피드백을 제거한다.
+ */
+function removeErrorMessage($formField) {
+  $formField.classList.remove('error');
+  const error = $formField.querySelector('.error-message');
+  if (error) error.remove();
+}
 
 //====== 메인 실행 코드 ======//
 document.addEventListener('DOMContentLoaded', initSignUp);

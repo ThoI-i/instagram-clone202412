@@ -10,4 +10,21 @@
         (#{username}, #{password}, #{email}, #{phone}, #{name})
     </insert>
 
+    <select id="findByEmail" resultType="Member">
+        SELECT *
+        FROM users
+        WHERE email = #{email}
+    </select>
+
+    <select id="findByPhone" resultType="Member">
+        SELECT *
+        FROM users
+        WHERE phone = #{phone}
+    </select>
+
+    <select id="findByUsername" resultType="Member">
+        SELECT *
+        FROM users
+        WHERE username = #{username}
+    </select>
 </mapper>

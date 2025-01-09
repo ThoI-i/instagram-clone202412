@@ -75,7 +75,7 @@ function validateField($input) {
   // 이게 어떤태그인지 알아오기
   const fieldName = $input.name;
   // 입력값 읽어오기
-  const inputValue = $input.value;
+  const inputValue = $input.value.trim();
   // input의 부모 가져오기
   const $formField = $input.closest('.form-field');
 

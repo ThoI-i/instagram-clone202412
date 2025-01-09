@@ -1,5 +1,6 @@
 
-import { ValidationRules } from "./validation.js";
+import { ValidationRules, checkPasswordStrength } from "./validation.js";
+import { debounce } from '../util/debounce.js';
 
 
 // 회원 가입정보를 서버에 전송하기
@@ -31,9 +32,12 @@ function initSignUp() {
     password: $form.querySelector('input[name="password"]'),
   };
 
+  // 디바운스가 걸린 validateField 함수
+  const debouncedValidate = debounce(validateField, 700);
+
   const handleInput = ($input) => {
     removeErrorMessage($input.closest('.form-field'));
-    validateField($input); // 입력값 검증 함수 호출
+    debouncedValidate($input); // 입력값 검증 함수 호출
   };
 
   // 4개의 입력창에 입력 이벤트 바인딩
@@ -136,6 +140,16 @@ function validateEmailOrPhone($formField, inputValue) {
     }
   }
 
+  // 강도 체크
+  const strength = checkPasswordStrength(inputValue);
+  switch (strength) {
+    case 'weak': // 에러로 볼 것
+      break;
+    case 'medium': // 에러는 아님
+      break;
+    case 'strong': // 에러는 아님
+      break;
+  }
 }
 
 //====== 메인 실행 코드 ======//

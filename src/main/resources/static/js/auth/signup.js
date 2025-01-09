@@ -1,4 +1,3 @@
-
 import { ValidationRules, checkPasswordStrength } from "./validation.js";
 import { debounce } from '../util/debounce.js';
 
@@ -13,8 +12,9 @@ async function fetchToSignUp(userData) {
   });
 
   const data = await response.json();
-  
-  alert(data.message);
+
+  // alert(data.message);
+  window.location.href = '/'; // 로그인 페이지 이동
 }
 
 
@@ -24,6 +24,10 @@ function initSignUp() {
   // form submit이벤트
   const $form = document.querySelector('.auth-form');
 
+  // 초기에 가입 버튼 비활성화
+  const $submitButton = $form.querySelector('.auth-button');
+  $submitButton.disabled = true;
+  
   // 입력 태그들을 읽어서 객체로 관리
   const $inputs = {
     emailOrPhone: $form.querySelector('input[name="email"]'),
@@ -32,8 +36,13 @@ function initSignUp() {
     password: $form.querySelector('input[name="password"]'),
   };
 
+  // 비밀번호 숨기기 토글 활성화
+  createPasswordToggle($inputs.password);
   // 디바운스가 걸린 validateField 함수
-  const debouncedValidate = debounce(validateField, 700);
+  const debouncedValidate = debounce(($input) => {
+    validateField($input);
+    updateSubmitButton($inputs, $submitButton); // 가입 버튼 활성화/비활성화 처리
+  }, 700);
 
   const handleInput = ($input) => {
     removeErrorMessage($input.closest('.form-field'));
@@ -43,7 +52,7 @@ function initSignUp() {
   // 4개의 입력창에 입력 이벤트 바인딩
   Object.values($inputs).forEach($input => { 
     $input.addEventListener('input', () => handleInput($input));
-    $input.addEventListener('blur', () => handleInput($input));
+    // $input.addEventListener('blur', () => handleInput($input));
   });
 
 
@@ -52,28 +61,29 @@ function initSignUp() {
     e.preventDefault(); // 폼 전송시 발생하는 새로고침 방지
 
     // 사용자가 입력한 모든 입력값 읽어오기
-    // const emailOrPhone = document.querySelector('input[name="email"]').value;
-    // const name = document.querySelector('input[name="name"]').value;
-    // const username = document.querySelector('input[name="username"]').value;
-    // const password = document.querySelector('input[name="password"]').value;
-
-    // const payload = {
-    //   emailOrPhone: emailOrPhone,
-    //   name: name,
-    //   username: username,
-    //   password: password,
-    // };
+    const emailOrPhone = document.querySelector('input[name="email"]').value;
+    const name = document.querySelector('input[name="name"]').value;
+    const username = document.querySelector('input[name="username"]').value;
+    const password = document.querySelector('input[name="password"]').value;
+    const payload = {
+      emailOrPhone: emailOrPhone,
+      name: name,
+      username: username,
+      password: password,
+    };
 
     // 서버로 데이터 전송
-    // fetchToSignUp(payload);
-    
+    fetchToSignUp(payload);
+
   });
 
 }
 
 // ==== 함수 정의 ==== //
 // 입력값을 검증하고 에러메시지를 렌더링하는 함수
-function validateField($input) {
+async function validateField($input) {
+  // 각 입력들이 유효한지 확인
+  let isValid = true;
 
   // 이게 어떤태그인지 알아오기
   const fieldName = $input.name;
@@ -81,23 +91,28 @@ function validateField($input) {
   const inputValue = $input.value.trim();
   // input의 부모 가져오기
   const $formField = $input.closest('.form-field');
-  
+
   // 1. 빈 값 체크
   if (!inputValue) {
+    isValid = false;
     // console.log(fieldName, ' is empty!');
     showError($formField, ValidationRules[fieldName]?.requiredMessage); // 에러메시지 렌더링
   } else {
     // 2. 상세 체크 (패턴검증, 중복검증)
     // 2-1. 이메일, 전화번호 검증
     if (fieldName === 'email') {
-      validateEmailOrPhone($formField, inputValue);
+      isValid = await validateEmailOrPhone($formField, inputValue);
     } else if (fieldName === 'password') {
-      validatePassword($formField, inputValue);
+      isValid = validatePassword($formField, inputValue);
     } else if (fieldName === 'username') {
-      validateUsername($formField, inputValue);
+      isValid = await validateUsername($formField, inputValue);
+    } else {
+      isValid = true;
     }
   }
 
+  // 각 input에 검사결과를 저장
+  $input.dataset.isValid = isValid.toString();
 }
 
 /**
@@ -126,7 +141,7 @@ function removeErrorMessage($formField) {
 async function fetchToCheckDuplicate(type, value) {
   const response = await fetch(`/api/auth/check-duplicate?type=${type}&value=${value}`);
   return await response.json();
-  
+
 }
 
 // 이메일 또는 전화번호를 상세검증
@@ -136,10 +151,12 @@ async function validateEmailOrPhone($formField, inputValue) {
   if (inputValue.includes('@')) {
     if (!ValidationRules.email.pattern.test(inputValue)) { // 패턴 체크
       showError($formField, ValidationRules.email.message);
+      return false;
     } else { // 서버에 통신해서 중복체크
       const data = await fetchToCheckDuplicate('email', inputValue);
       if (!data.available) {
         showError($formField, data.message);
+        return false;
       }
     }
   } else {
@@ -149,14 +166,17 @@ async function validateEmailOrPhone($formField, inputValue) {
     if (!ValidationRules.phone.pattern.test(numbers)) {
       // 패턴 체크
       showError($formField, ValidationRules.phone.message);
+      return false;
     } else {
       // 서버에 통신해서 중복체크
       const data = await fetchToCheckDuplicate('phone', numbers);
       if (!data.available) {
         showError($formField, data.message);
+        return false;
       }
     }
   }
+  return true;
 
 }
 
@@ -165,6 +185,7 @@ function validatePassword($formField, inputValue) {
   // 길이 확인
   if (!ValidationRules.password.patterns.length.test(inputValue)) {
     showError($formField, ValidationRules.password.messages.length);
+    return false;
   }
 
   // 강도 체크
@@ -172,21 +193,21 @@ function validatePassword($formField, inputValue) {
   switch (strength) {
     case 'weak': // 에러로 볼것임
       showError($formField, ValidationRules.password.messages.weak);
-      break;
+      return false;
     case 'medium': // 에러는 아님
       showPasswordFeedback(
         $formField,
         ValidationRules.password.messages.medium,
         'warning'
       );
-      break;
+      return true;
     case 'strong': // 에러는 아님
       showPasswordFeedback(
         $formField,
         ValidationRules.password.messages.strong,
         'success'
       );
-      break;
+      return true;
   }
 
 }
@@ -208,13 +229,40 @@ async function validateUsername($formField, inputValue) {
 
   if (!ValidationRules.username.pattern.test(inputValue)) {
     showError($formField, ValidationRules.username.message);
+    return false;
   }
 
   // 중복검사
   const data = await fetchToCheckDuplicate('username', inputValue);
   if (!data.available) {
     showError($formField, data.message);
+    return false;
   }
+  return true;
+}
+/**
+ * 비밀번호 표시/숨기기 토글 기능 생성
+ */
+function createPasswordToggle(passwordInput) {
+  const $toggle = document.querySelector('.password-toggle');
+  passwordInput.addEventListener('input', (e) => {
+    $toggle.style.display = e.target.value.length > 0 ? 'block' : 'none';
+  });
+  $toggle.addEventListener('click', () => {
+    const isCurrentlyPassword = passwordInput.type === 'password';
+    passwordInput.type = isCurrentlyPassword ? 'text' : 'password';
+    $toggle.textContent = isCurrentlyPassword ? '숨기기' : '패스워드 표시';
+  });
+}
+/**
+ * 모든 필드의 유효성 상태를 확인해, 회원가입 버튼 활성/비활성 제어
+ */
+function updateSubmitButton($inputs, $submitButton) {
+  const allFieldsValid = Object.values($inputs).every((input) => {
+    return input.value.trim() !== '' && input.dataset.isValid === 'true';
+  });
+  console.log('all: ', allFieldsValid);
+  $submitButton.disabled = !allFieldsValid;
 }
 
 

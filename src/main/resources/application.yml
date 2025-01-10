@@ -34,5 +34,5 @@ file:
 
 jwt:
   secret-key: C3OK1xLATu2qiRwMoOteThok4300xwRGnEOgCCN2H0k= # 토큰 발급 시와 토큰 위조 검사 시 사용할 서명
-  access-token-validity-time: 3600000  # 1시간
-  refresh-token-validity-time: 604800000 # 7일
+  access-token-validity-time: 3600000  # 1시간 (ms)
+  refresh-token-validity-time: 604800000 # 7일 (ms)

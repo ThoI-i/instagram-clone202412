@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Service
 @Slf4j
-@Transactional(readOnly = true) // 트랜잭션 처리 -> Select만 하고 있기 떄문에 readOnly 걸어두면 좋음
+@Transactional // 트랜잭션 처리
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -100,14 +100,17 @@ public class MemberService {
         3. 존재한다면 회원정보를 데이터베이스에서 받아와서 비밀번호를 꺼내옴
         4. 패스워드 일치를 검사
      */
+    @Transactional(readOnly = true)
     public Map<String, Object> authenticate(LoginRequest loginRequest) {
 
         String username = loginRequest.getUsername();
 
-        Member foundMember = memberRepository.findByEmail(username)
-                .orElseThrow(
-                        () -> new MemberException(ErrorCode.MEMBER_NOT_FOUND, "존재하지 않는 회원입니다.")
-                ); // 조회가 실패했다면 예외 발생
+        Member foundMember = memberRepository.findByUsername(username)
+                .orElseGet(() -> memberRepository.findByEmail(username)
+                        .orElseGet(() -> memberRepository.findByPhone(username)
+                                .orElseThrow(
+                                        () -> new MemberException(ErrorCode.MEMBER_NOT_FOUND)
+                                )));
 
         // 사용자가 입력한 패스워드와 DB에 저장된 패스워드를 추출
         String inputPassword = loginRequest.getPassword();
@@ -125,6 +128,4 @@ public class MemberService {
                 "username", foundMember.getUsername()
         );
     }
-
-
 }

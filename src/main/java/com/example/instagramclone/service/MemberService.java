@@ -24,6 +24,32 @@ public class MemberService {
     // 회원가입 중간처리
     public void signUp(SignUpRequest signUpRequest) {
 
+        /*
+            Race condition 방지
+
+            사용자가 중복체크 후 회원가입 버튼을 누르기 전까지의 시간동안
+            다른 사용자가 같은 값으로 가입할 수 있음
+            이를 최종 회원가입에서 한번 더 검사해서 방지
+         */
+        String emailOrPhone = signUpRequest.getEmailOrPhone();
+        if (emailOrPhone.contains("@")) {
+            memberRepository.findByEmail(emailOrPhone)
+                    .ifPresent(m -> {
+                        throw new MemberException(ErrorCode.DUPLICATE_EMAIL);
+                    });
+        } else {
+            memberRepository.findByPhone(emailOrPhone)
+                    .ifPresent(m -> {
+                        throw new MemberException(ErrorCode.DUPLICATE_PHONE);
+                    });
+        }
+
+        memberRepository.findByUsername(signUpRequest.getUsername())
+                .ifPresent(m -> {
+                    throw new MemberException(ErrorCode.DUPLICATE_USERNAME);
+                });
+
+
         // 순수 비밀번호를 꺼내서 암호화
         String rawPassword = signUpRequest.getPassword();
         // 암호화된 패스워드

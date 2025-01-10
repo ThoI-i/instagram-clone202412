@@ -10,8 +10,22 @@ async function handleLogin(e) {
   const username = $loginForm.querySelector('input[name=username]').value;
   const password = $loginForm.querySelector('input[name=password]').value;
 
-  console.log(username);
-  console.log(password);
+  // 서버로 보낼 데이터
+  const payload = {
+    username,
+    password
+  };
+
+  // API 통신 보내기
+  const response = await fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  const data = await response.json();
+
+  alert(data.message);
   
 }
 

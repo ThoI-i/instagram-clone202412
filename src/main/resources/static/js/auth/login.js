@@ -19,7 +19,9 @@ async function handleLogin(e) {
   // API 통신 보내기
   const response = await fetch('/api/auth/login', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(payload)
   });
 

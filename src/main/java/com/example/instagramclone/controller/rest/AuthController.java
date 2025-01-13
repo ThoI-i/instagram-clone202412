@@ -20,6 +20,7 @@ public class AuthController {
 
     private final MemberService memberService;
 
+    // 회원가입 요청
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
         log.info("request for signup: {}", signUpRequest.getUsername());

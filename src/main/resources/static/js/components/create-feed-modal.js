@@ -71,9 +71,12 @@ async function fetchFeed() {
   setLoading(true); // 로딩 상태 활성화
 
   setTimeout(async () => {
-    // 서버에 POST요청 전송
+    // 서버에 POST요청 토큰을 포함시켜서 전송
     const response = await fetch('/api/posts', {
       method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      },
       body: formData
     });
 

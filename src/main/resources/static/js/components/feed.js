@@ -6,7 +6,17 @@ const $feedContainer = document.querySelector('.feed-container');
 
 // 피드를 서버로부터 불러오는 함수
 async function fetchFeeds() {
-  const response = await fetch('/api/posts');
+
+  // 토큰 가져오기
+  const token = localStorage.getItem('accessToken');
+
+  // 서버 요청시 토큰을 헤더에 포함해서 요청해야 함
+  const response = await fetch('/api/posts', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
   if (!response.ok) alert('피드 목록을 불러오는데 실패했습니다.');
   return await response.json();
 }

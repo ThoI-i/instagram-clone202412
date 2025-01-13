@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +26,11 @@ public class PostController {
 
     // 피드 목록 조회 요청
     @GetMapping
-    public ResponseEntity<?> getFeeds() {
+    public ResponseEntity<?> getFeeds(
+            @AuthenticationPrincipal String username
+    ) {
+
+        log.info("피드에서 인증된 사용자명: {}", username);
 
         List<PostResponse> allFeeds = postService.findAllFeeds();
 

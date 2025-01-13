@@ -106,6 +106,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Map<String, Object> authenticate(LoginRequest loginRequest) {
 
+        // 로그인 시도하는 계정명 (이메일, 전화번호, 사용자이름)
         String username = loginRequest.getUsername();
 
         Member foundMember = memberRepository.findByUsername(username)
@@ -129,7 +130,7 @@ public class MemberService {
         return Map.of(
                 "message", "로그인에 성공했습니다.",
                 "username", foundMember.getUsername(),
-                "accessToken", jwtTokenProvider.createAccessToken(username)
+                "accessToken", jwtTokenProvider.createAccessToken(foundMember.getUsername())
         );
     }
 }

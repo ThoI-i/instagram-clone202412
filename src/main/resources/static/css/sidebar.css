@@ -108,6 +108,54 @@ button.menu-item {
     text-align: left;
 }
 
+/* 로그아웃 관련 */
+.more-menu {
+    position: absolute;
+    bottom: 100%;
+    left: -12px; /* sidebar 밖으로 확장 */
+    width: 280px; /* 더 넓은 너비 지정 */
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: none;
+    padding: 8px 0;
+}
+
+.more-menu.active {
+    display: block;
+}
+
+.more-menu .menu-item {
+    width: 100%;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: none;
+    background: none;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+}
+
+.menu-divider {
+    border: none;
+    height: 1px;
+    background-color: #dbdbdb;
+    margin: 8px 0;
+}
+
+.more-menu .menu-item:hover {
+    background-color: #f3f3f3;
+}
+
+/* 마우스 클릭할 때의 효과 */
+.more-menu .menu-item:active {
+    background-color: #f0f0f0;
+}
+
+
 /* Responsive Styles */
 @media (max-width: 1263px) {
     .sidebar {

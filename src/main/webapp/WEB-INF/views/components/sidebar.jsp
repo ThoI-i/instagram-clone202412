@@ -67,10 +67,44 @@
       <span class="menu-text">Threads</span>
     </a>
 
-    <!-- More -->
-    <button class="menu-item">
-      <i class="fa-solid fa-bars"></i>
-      <span class="menu-text">더 보기</span>
-    </button>
+    <!-- 더보기 -->
+    <div class="more-menu-container" style="position: relative;">
+      <button class="menu-item" id="moreButton">
+        <i class="fa-solid fa-bars"></i>
+        <span class="menu-text">더 보기</span>
+      </button>
+
+      <div class="more-menu" id="moreMenu">
+        <button class="menu-item">
+          <i class="fa-solid fa-gear"></i>
+          <span>설정</span>
+        </button>
+        <button class="menu-item">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>내 활동</span>
+        </button>
+        <button class="menu-item">
+          <i class="fa-regular fa-bookmark"></i>
+          <span>저장됨</span>
+        </button>
+        <button class="menu-item">
+          <i class="fa-regular fa-sun"></i>
+          <span>모드 전환</span>
+        </button>
+        <button class="menu-item">
+          <i class="fa-regular fa-flag"></i>
+          <span>문제 신고</span>
+        </button>
+        <div class="menu-divider"></div>
+        <button class="menu-item">
+          <span>계정 전환</span>
+        </button>
+        <div class="menu-divider"></div>
+        <button class="menu-item" id="logoutButton">
+          <span>로그아웃</span>
+        </button>
+      </div>
+    </div>
+    
   </div>
 </nav>

@@ -56,7 +56,7 @@ function truncateContent(writer, content, maxLength = 20) {
   // 1. 먼저 텍스트 길이 체크
   if (content.length <= maxLength) {
     return `
-      <a href="#" class="post-username">${writer}</a>
+      <a href="/${writer}" class="post-username">${writer}</a>
       <span class="post-caption">${convertHashtagsToLinks(content)}</span>
     `;
   }
@@ -65,7 +65,7 @@ function truncateContent(writer, content, maxLength = 20) {
   const truncatedContent = content.substring(0, maxLength);
 
   return `
-    <a href="#" class="post-username">${writer}</a>
+    <a href="/${writer}" class="post-username">${writer}</a>
     <span class="post-caption post-caption-truncated">
       <span class="truncated-text">${convertHashtagsToLinks(truncatedContent)}...</span>
       <span class="full-text" style="display: none;">${convertHashtagsToLinks(content)}</span>
@@ -78,7 +78,7 @@ function truncateContent(writer, content, maxLength = 20) {
 // 한개의 피드를 렌더링하는 함수
 function createFeedItem({ username, profileImageUrl, content, images, createdAt }) {
 
-  // const makeImageTags = (images) => {
+  // const makeImageTags = (images) => { 
   //   let imgTag = '';
   //   for (const img of images) {
   //     imgTag += `<img src="${img.imageUrl}">`;
@@ -94,7 +94,7 @@ function createFeedItem({ username, profileImageUrl, content, images, createdAt 
             <img src="${profileImageUrl || '/images/default-profile.svg'}" alt="프로필 이미지">
           </div>
           <div class="post-user-details">
-            <a href="#" class="post-username">
+            <a href="/${username}" class="post-username">
                 <!--      작성자 이름 배치      -->
                 ${username}
             </a>
@@ -141,7 +141,7 @@ function createFeedItem({ username, profileImageUrl, content, images, createdAt 
           }
         </div>
       </div>
-
+      
       <div class="post-actions">
         <div class="post-buttons">
           <div class="post-buttons-left">
@@ -163,7 +163,7 @@ function createFeedItem({ username, profileImageUrl, content, images, createdAt 
           좋아요 <span class="likes-count">0</span>개
         </div>
       </div>
-
+      
 
       <div class="post-content">
         <div class="post-text">
@@ -175,7 +175,7 @@ function createFeedItem({ username, profileImageUrl, content, images, createdAt 
             ${formatDate(createdAt)}
         </div>
       </div>
-
+      
       <div class="post-comments">
         <form class="comment-form">
           <input type="text" placeholder="댓글 달기..." class="comment-input">

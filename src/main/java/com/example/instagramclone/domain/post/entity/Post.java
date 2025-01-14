@@ -13,7 +13,7 @@ import java.util.List;
 public class Post {
     private Long id;
     private String content;
-    private String writer;
+    private Long memberId;  // 이 피드를 쓴 사용자의 ID
     private int viewCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -46,6 +46,7 @@ public class PostController {
             @RequestPart("feed") @Valid PostCreate postCreate
             // 이미지 파일 목록 multipart-file
             , @RequestPart("images") List<MultipartFile> images
+            , @AuthenticationPrincipal String username // 인증된 사용자 이름
     ) {
 
         // 파일 업로드 개수 검증
@@ -61,7 +62,7 @@ public class PostController {
         log.info("feed create request: POST - {}", postCreate);
 
         // 이미지와 JSON을 서비스클래스로 전송
-        Long postId = postService.createFeed(postCreate);
+        Long postId = postService.createFeed(postCreate, username);
 
         // 응답 메시지 JSON 생성 { "id": 23, "message": "save success" }
         Map<String, Object> response = Map.of(

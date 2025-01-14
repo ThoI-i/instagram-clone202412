@@ -45,7 +45,9 @@ public class PostService {
     }
 
 
+
     // 피드 생성 DB에 가기 전 후 중간처리
+    @Transactional
     public Long createFeed(PostCreate postCreate) {
 
         // entity 변환

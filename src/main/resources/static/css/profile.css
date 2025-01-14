@@ -1,0 +1,385 @@
+/* ===============================
+   메인 컨텐츠 영역
+   =============================== */
+   .profile-main {
+    flex: 1;
+    max-width: 935px;
+    padding: 30px 20px 0;
+    margin: 0 auto;
+    /* 사이드바 너비 + 남은 공간의 절반 */
+    margin-left: calc(244px + ((100% - 935px - 244px) / 2));
+}
+
+/* ===============================
+   프로필 헤더
+   =============================== */
+.profile-header {
+    display: flex;
+    margin-bottom: 44px;
+    padding: 0 30px;
+}
+
+/* 프로필 이미지 컨테이너 */
+.profile-image-container {
+    flex: 0 0 290px;
+    margin-right: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.profile-header .profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.profile-header .profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 프로필 정보 영역 */
+.profile-info {
+    flex: 1;
+}
+
+/* ===============================
+   사용자명과 버튼 행
+   =============================== */
+.profile-actions {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-actions .username {
+    font-size: 20px;
+    font-weight: 400;
+    margin-right: 20px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.profile-edit-button,
+.settings-button {
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: none;
+    background-color: #efefef;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.settings-button {
+    padding: 8px;
+}
+
+/* ===============================
+   통계 정보
+   =============================== */
+.profile-stats {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+    gap: 40px;
+}
+
+.profile-stats li {
+    font-size: 16px;
+}
+
+.stats-number {
+    font-weight: 600;
+}
+
+/* ===============================
+   프로필 소개
+   =============================== */
+.profile-bio {
+    max-width: 400px;
+}
+
+.full-name {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.bio-text {
+    white-space: pre-line;
+    margin-bottom: 4px;
+}
+
+.website a {
+    color: #00376b;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* ===============================
+   하이라이트 섹션
+   =============================== */
+.highlights-section {
+    padding: 0 30px;
+    margin-bottom: 44px;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.highlights-container {
+    display: flex;
+    gap: 24px;
+    padding-bottom: 30px;
+    overflow-x: auto;
+}
+
+.highlight-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.highlight-image {
+    width: 87px;
+    height: 87px;
+    border-radius: 50%;
+    border: 1px solid #dbdbdb;
+    padding: 3px;
+}
+
+.highlight-image img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.highlight-name {
+    font-size: 12px;
+    color: #262626;
+}
+
+/* ===============================
+   프로필 내비게이션
+   =============================== */
+.profile-nav {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid #dbdbdb;
+    margin-bottom: 0;
+}
+
+.profile-nav a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 0;
+    margin: 0 30px;
+    color: #8e8e8e;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-top: 1px solid transparent;
+    margin-top: -1px;
+}
+
+.profile-nav a.active {
+    color: #262626;
+    border-top-color: #262626;
+}
+
+.profile-nav i {
+    font-size: 12px;
+}
+
+/* ===============================
+   게시물 그리드 (최신 코드 기준)
+   =============================== */
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px; /* 최신 코드: gap 4px */
+    padding: 0 20px;
+}
+
+.grid-item {
+    position: relative;
+    aspect-ratio: 1;
+    background-color: #fafafa;
+    cursor: pointer;
+    overflow: hidden; /* 최신 코드에서 추가 */
+}
+
+.grid-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease; /* 최신 코드에서 추가 */
+}
+
+/* 호버 효과 (최신 코드 기준) */
+.grid-item:hover img {
+    transform: scale(1.05);
+}
+
+.grid-item-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.grid-item:hover .grid-item-overlay {
+    opacity: 1;
+}
+
+.grid-item-stats {
+    display: flex;
+    gap: 30px;
+    color: white;
+    font-weight: 600;
+    font-size: 16px; /* 최신 코드에서 추가 */
+}
+
+.grid-item-stats span {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* 최신 코드에서 추가 */
+}
+
+.grid-item-stats i {
+    font-size: 20px;
+}
+
+/* profile.css에 추가 */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.profile-edit-button,
+.follow-button,
+.message-button,
+.settings-button {
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.profile-edit-button,
+.message-button {
+    background-color: #efefef;
+    color: #000;
+}
+
+.follow-button {
+    background-color: #0095f6;
+    color: white;
+}
+
+.settings-button {
+    padding: 8px;
+    background-color: transparent;
+}
+
+.settings-button i {
+    font-size: 16px;
+}
+
+/* ===============================
+   모달 스타일
+   =============================== */
+.post-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* ===============================
+   반응형
+   =============================== */
+@media (max-width: 735px) {
+    .posts-grid {
+        gap: 3px;
+        padding: 0;
+    }
+}
+
+@media (max-width: 935px) {
+    .profile-header {
+        padding: 0;
+    }
+
+    .highlights-section {
+        padding: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    /* 최신 코드에서 .profile-main이 변경되었으므로 아래쪽 코드 기준으로 반영 */
+    .profile-main {
+        margin-left: 72px; /* 축소된(모바일) 사이드바 너비만큼 */
+        padding: 30px 0 0;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-image-container {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .profile-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .profile-stats {
+        justify-content: center;
+    }
+
+    .profile-bio {
+        text-align: center;
+        margin: 0 auto;
+    }
+}
+
+/* 1264px 이하 반응형 처리 */
+@media (max-width: 1264px) {
+    .profile-main {
+        margin-left: 244px; /* 화면이 좁아지면 사이드바 바로 옆에 붙임 */
+        padding: 30px 20px 0;
+    }
+}

@@ -38,7 +38,8 @@ public class PostResponse {
     @JsonProperty("feed_id")
     private Long id;
     private String content;
-    private String writer;
+    private String username;
+    private String profileImageUrl;
     private List<PostImageResponse> images;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -47,6 +48,8 @@ public class PostResponse {
         return PostResponse.builder()
                 .id(feed.getId())
                 .content(feed.getContent())
+                .username(feed.getMember().getUsername())
+                .profileImageUrl(feed.getMember().getProfileImageUrl())
                 .images(
                         feed.getImages()
                                 .stream()

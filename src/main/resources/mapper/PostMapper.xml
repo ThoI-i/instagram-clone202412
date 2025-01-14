@@ -26,12 +26,31 @@
         ORDER BY image_order
     </select>
 
-    <select id="findAll" resultType="Post">
+    <select id="findAll" resultMap="PostResultMap">
         SELECT
-        *
-        FROM posts
+        p.*
+        , u.username
+        , u.profile_image_url
+        FROM posts p
+        INNER JOIN users u
+        ON u.id = p.member_id
         ORDER BY
         created_at DESC, id DESC
     </select>
+
+    <resultMap id="PostResultMap" type="Post">
+        <id property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="memberId" column="member_id"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <!--    내부 단일 객체 매핑 설정    -->
+        <association property="member" javaType="Member">
+            <id property="id" column="id"/>
+            <result property="username" column="username"/>
+            <result property="profileImageUrl" column="profile_image_url"/>
+        </association>
+    </resultMap>
 
 </mapper>

@@ -76,9 +76,9 @@ function truncateContent(writer, content, maxLength = 20) {
 
 
 // 한개의 피드를 렌더링하는 함수
-function createFeedItem({ writer, content, images, createdAt }) {
+function createFeedItem({ username, profileImageUrl, content, images, createdAt }) {
 
-  // const makeImageTags = (images) => { 
+  // const makeImageTags = (images) => {
   //   let imgTag = '';
   //   for (const img of images) {
   //     imgTag += `<img src="${img.imageUrl}">`;
@@ -91,12 +91,12 @@ function createFeedItem({ writer, content, images, createdAt }) {
       <div class="post-header">
         <div class="post-user-info">
           <div class="post-profile-image">
-            <img src="/images/default-profile.svg" alt="프로필 이미지">
+            <img src="${profileImageUrl || '/images/default-profile.svg'}" alt="프로필 이미지">
           </div>
           <div class="post-user-details">
             <a href="#" class="post-username">
                 <!--      작성자 이름 배치      -->
-                ${writer}
+                ${username}
             </a>
           </div>
         </div>
@@ -141,7 +141,7 @@ function createFeedItem({ writer, content, images, createdAt }) {
           }
         </div>
       </div>
-      
+
       <div class="post-actions">
         <div class="post-buttons">
           <div class="post-buttons-left">
@@ -163,19 +163,19 @@ function createFeedItem({ writer, content, images, createdAt }) {
           좋아요 <span class="likes-count">0</span>개
         </div>
       </div>
-      
+
 
       <div class="post-content">
         <div class="post-text">
             <!--     피드 내용     -->
-            ${truncateContent(writer, content)}
+            ${truncateContent(username, content)}
         </div>
         <div class="post-time">
             <!--      피드 생성 시간      -->
             ${formatDate(createdAt)}
         </div>
       </div>
-      
+
       <div class="post-comments">
         <form class="comment-form">
           <input type="text" placeholder="댓글 달기..." class="comment-input">
@@ -191,6 +191,7 @@ function createFeedItem({ writer, content, images, createdAt }) {
 async function renderFeed() {
   // 피드 데이터를 서버로부터 불러오기
   const feedList = await fetchFeeds();
+  console.log(feedList);
 
   // feed html 생성
   $feedContainer.innerHTML = feedList.map((feed) => createFeedItem(feed)).join('');

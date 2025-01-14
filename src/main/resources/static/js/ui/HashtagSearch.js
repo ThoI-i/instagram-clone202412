@@ -1,3 +1,4 @@
+import { fetchWithAuth } from "../util/api.js";
 
 class HashtagSearch {
   constructor($textarea) {
@@ -10,7 +11,6 @@ class HashtagSearch {
 
     // 디바운스를 위한 타이머변수
     this.searchTimeout = null;
-
 
   }
 
@@ -52,7 +52,7 @@ class HashtagSearch {
       return;
     }
 
-    const response = await fetch(`/api/hashtags/search?keyword=${keyword}`);
+    const response = await fetchWithAuth(`/api/hashtags/search?keyword=${keyword}`);
     const hashtags = await response.json();
     // console.log(hashtags);
 

@@ -35,7 +35,7 @@ async function renderProfileHeader({ feedCount, name, username, profileImageUrl 
     '.profile-stats li:first-child .stats-number'
   ).textContent = feedCount;
 
-  // 본인의 페이지인지 타인의 페이지인지에 따라 다른 버튼을 렌더링(동적 렌더링)
+  // 본인의 페이지인지 타인의 페이지인지에 따라 다른 버튼을 렌더링
   const match = await isUserMatched();
 
   // 버튼 영역 렌더링
@@ -74,6 +74,52 @@ async function initProfileHeader() {
 }
 
 
+function renderProfileFeeds(feedList) {
+
+  const $gridContainer = document.querySelector('.posts-grid');
+
+  // 그리드 아이템 HTML 생성
+  $gridContainer.innerHTML = feedList
+    .map(
+      (feed) => `
+            <div class="grid-item" data-post-id="${feed.id}">
+                <img src="${feed.mainThumbnail}" alt="게시물 이미지">
+                <div class="grid-item-overlay">
+                    <div class="grid-item-stats">
+                        <span>
+                            <i class="fa-solid fa-heart"></i> ${feed.likeCount}
+                        </span>
+                        <span>
+                            <i class="fa-solid fa-comment"></i> ${feed.commentCount}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        `
+    )
+    .join('');
+}
+
+
+// 프로필 페이지 피드 목록 렌더링 (메인 썸네일, 좋아요 수, 댓글 수 등)
+async function initProfileFeeds() {
+
+  const username = getPageUsername();
+  const response = await fetchWithAuth(`/api/profiles/${username}/posts`);
+
+  if (!response.ok) {
+    alert('프로필 피드를 불러오는 데 실패했습니다.');
+    return;
+  }
+
+  const feedList = await response.json();
+
+  // 피드 렌더링 업데이트
+  renderProfileFeeds(feedList);
+
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
   
   //===== 인덱스페이지와 공통 처리 ==== //
@@ -83,4 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //===== 프로필 페이지 개별 처리 ===== //
   initProfileHeader(); // 프로필 페이지 헤더 관련
+  initProfileFeeds();  // 프로필 페이지 피드 관련
+
 });

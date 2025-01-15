@@ -53,4 +53,12 @@
         </association>
     </resultMap>
 
+
+    <!-- 특정 사용자의 피드 개수  조회 -->
+    <select id="countByMemberId" resultType="long">
+        SELECT COUNT(*)
+        FROM posts
+        WHERE member_id = #{memberId}
+    </select>
+
 </mapper>

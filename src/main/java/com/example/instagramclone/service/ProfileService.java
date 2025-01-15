@@ -1,10 +1,12 @@
 package com.example.instagramclone.service;
 
 import com.example.instagramclone.domain.member.dto.response.MeResponse;
+import com.example.instagramclone.domain.member.dto.response.ProfileHeaderResponse;
 import com.example.instagramclone.domain.member.entity.Member;
 import com.example.instagramclone.exception.ErrorCode;
 import com.example.instagramclone.exception.MemberException;
 import com.example.instagramclone.repository.MemberRepository;
+import com.example.instagramclone.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileService {
 
     private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
 
     /**
      * 로그인한 유저 정보를 반환하는 처리
@@ -32,5 +35,21 @@ public class ProfileService {
                 );
 
         return MeResponse.from(foundMember);
+    }
+
+    // 프로필 페이지 상단 헤더에 사용할 데이터 가져오기
+    @Transactional(readOnly = true)
+    public ProfileHeaderResponse getProfileHeader(String username) {
+
+        // 사용자 이름에 매칭되는 회원정보 (프사, 이름, 사용자이름)
+        Member foundMember = memberRepository.findByUsername(username)
+                .orElseThrow(
+                        () -> new MemberException(ErrorCode.MEMBER_NOT_FOUND)
+                );
+
+        // 이 사용자가 작성한 피드의 수
+        long feedCount = postRepository.countByMemberId(foundMember.getId());
+
+        return ProfileHeaderResponse.of(foundMember, feedCount);
     }
 }

@@ -15,7 +15,7 @@
     justify-content: center;
 }
 
-.modal-backdrop {
+.modal-container .modal-backdrop {
     position: absolute;
     top: 0;
     left: 0;
@@ -24,7 +24,7 @@
     background-color: rgba(0, 0, 0, 0.65);
 }
 
-.modal-content {
+.modal-container .modal-content {
     position: relative;
     background-color: white;
     border-radius: 12px;
@@ -38,7 +38,7 @@
 }
 
 /* 모달 헤더 */
-.modal-header {
+.modal-container .modal-header {
     position: relative;
     height: 43px;
     border-bottom: 1px solid #dbdbdb;
@@ -48,7 +48,7 @@
     padding: 0 16px;
 }
 
-.modal-title {
+.modal-container .modal-title {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -57,7 +57,7 @@
 }
 
 /* X 버튼 스타일 */
-.modal-close-button {
+.modal-container .modal-close-button {
     position: fixed;
     top: 20px;
     right: 20px;
@@ -76,18 +76,18 @@
     transition: transform 0.2s ease;
 }
 
-.modal-close-button:hover {
+.modal-container .modal-close-button:hover {
     transform: scale(1.1);
 }
 
-.back-button {
+.modal-container .back-button {
     border: none;
     background: none;
     padding: 8px;
     cursor: pointer;
 }
 
-.next-button {
+.modal-container .next-button {
     border: none;
     background: none;
     color: #0095f6;
@@ -97,43 +97,43 @@
     display: none;
 }
 
-.next-button:disabled {
+.modal-container .next-button:disabled {
     opacity: 0.3;
     cursor: default;
 }
 
-.loading-spinner {
+.modal-container .loading-spinner {
     position: absolute;
     right: 16px;
     color: #0095f6;
 }
 
-.next-button.loading {
+.modal-container .next-button.loading {
     visibility: hidden;
 }
 
 /* 모달 바디 & 스텝 */
-.modal-body {
+.modal-container .modal-body {
     flex: 1;
     overflow: hidden;
 }
 
-.step {
+.modal-container .step {
     display: none;
     width: 100%;
     height: 100%;
 }
 
-.step.active {
+.modal-container .step.active {
     display: flex;
 }
 
 /* 업로드 영역 */
-.upload-container {
+.modal-container .upload-container {
     padding: 24px;
 }
 
-.upload-area {
+.modal-container .upload-area {
     width: 100%;
     height: 100%;
     border: 2px dashed #dbdbdb;
@@ -145,17 +145,17 @@
     gap: 16px;
 }
 
-.upload-area.dragover {
+.modal-container .upload-area.dragover {
     border-color: #0095f6;
     background-color: rgba(0, 149, 246, 0.05);
 }
 
-.upload-area i {
+.modal-container .upload-area i {
     font-size: 48px;
     color: #262626;
 }
 
-.upload-button {
+.modal-container .upload-button {
     background-color: #0095f6;
     color: white;
     border: none;
@@ -167,31 +167,31 @@
 }
 
 /* 미리보기 영역 */
-.preview-container {
+.modal-container .preview-container {
     background-color: black;
 }
 
-.preview-container .preview-area {
+.modal-container .preview-container .preview-area {
     width: 100%;
     height: 100%;
     display: flex;
 }
 
 /* 캐러셀 */
-.carousel-container {
+.modal-container .carousel-container {
     position: relative;
     width: 100%;
     height: 100%;
     overflow: hidden;
 }
 
-.carousel-track {
+.modal-container .carousel-track {
     display: flex;
     height: 100%;
     transition: transform 0.3s ease-in-out;
 }
 
-.carousel-slide {
+.modal-container .carousel-slide {
     flex: 0 0 100%;
     height: 100%;
     display: flex;
@@ -199,14 +199,14 @@
     justify-content: center;
 }
 
-.carousel-slide img {
+.modal-container .carousel-slide img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
 }
 
-.carousel-prev,
-.carousel-next {
+.modal-container .carousel-prev,
+.modal-container .carousel-next {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -222,10 +222,15 @@
     z-index: 1;
 }
 
-.carousel-prev { left: 16px; }
-.carousel-next { right: 16px; }
+.modal-container .carousel-prev {
+    left: 16px;
+}
 
-.carousel-indicators {
+.modal-container .carousel-next {
+    right: 16px;
+}
+
+.modal-container .carousel-indicators {
     position: absolute;
     bottom: 16px;
     left: 50%;
@@ -234,7 +239,7 @@
     gap: 4px;
 }
 
-.indicator {
+.modal-container .indicator {
     width: 6px;
     height: 6px;
     border-radius: 50%;
@@ -242,71 +247,69 @@
     cursor: pointer;
 }
 
-.indicator.active {
+.modal-container .indicator.active {
     background-color: white;
 }
 
 /* 글쓰기 영역 */
 /* 글쓰기 컨테이너 스타일 */
-.write-container {
+.modal-container .write-container {
     width: 100%;
     height: 100%;
 }
 
-.write-layout {
+.modal-container .write-layout {
     display: flex;
     width: 100%;
     height: 100%;
 }
 
 /* 미리보기 영역 (왼쪽) */
-.write-container .preview-area {
+.modal-container .write-container .preview-area {
     width: 65%;
     background-color: black;
     position: relative;
 }
 
 /* 글쓰기 영역 (오른쪽) */
-.write-area {
+.modal-container .write-area {
     width: 35%;
     display: flex;
     flex-direction: column;
     border-left: 1px solid #dbdbdb;
 }
 
-
-.user-info {
+.modal-container .user-info {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 14px 16px 0;
 }
 
-.profile-image {
+.modal-container .profile-image {
     width: 28px;
     height: 28px;
     border-radius: 50%;
     overflow: hidden;
 }
 
-.profile-image img {
+.modal-container .profile-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.username {
+.modal-container .username {
     font-weight: 600;
     font-size: 14px;
 }
 
-.content-input {
+.modal-container .content-input {
+    position: relative;
     padding: 10px 14px;
 }
 
-
-
-.content-input textarea {
+.modal-container .content-input textarea {
     width: 100%;
     min-height: 120px;
     max-height: 180px;
@@ -318,29 +321,28 @@
     padding: 0;
 }
 
-
-.content-input textarea:focus {
+.modal-container .content-input textarea:focus {
     outline: none;
 }
 
-.char-counter {
+.modal-container .char-counter {
     color: #737373;
     font-size: 12px;
     text-align: right;
     padding: 0 4px;
 }
 
-.char-counter.exceed {
+.modal-container .char-counter.exceed {
     color: #ed4956;  /* 제한 초과시 빨간색으로 표시 */
 }
 
-.additional-options {
+.modal-container .additional-options {
     border-top: 1px solid #dbdbdb;
     border-bottom: 1px solid #dbdbdb;
     margin-top: 5%;
 }
 
-.option-item {
+.modal-container .option-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -348,15 +350,11 @@
     cursor: pointer;
 }
 
-.option-item:last-child {
+.modal-container .option-item:last-child {
     border-bottom: none;
 }
 
-
-
-
-
-.nested-modal {
+.modal-container .nested-modal {
     position: absolute;
     top: 0;
     left: 0;
@@ -369,36 +367,34 @@
     z-index: 1002;
 }
 
-.nested-modal-title {
+.modal-container .nested-modal-title {
     margin: 32px 32px 0;
 }
 
-.nested-modal-title h3 {
+.modal-container .nested-modal-title h3 {
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 8px;
 }
 
-.nested-modal-title p {
+.modal-container .nested-modal-title p {
     color: #737373;
     margin-bottom: 24px;
 }
 
-.nested-modal-content {
+.modal-container .nested-modal-content {
     background: white;
     border-radius: 12px;
     width: 400px;
     text-align: center;
 }
 
-
-
-.nested-modal-buttons {
+.modal-container .nested-modal-buttons {
     display: flex;
     flex-direction: column;
 }
 
-.nested-modal-buttons button {
+.modal-container .nested-modal-buttons button {
     width: 100%;
     padding: 14px;
     border: none;
@@ -409,24 +405,24 @@
     border-top: 1px solid #dbdbdb;
 }
 
-.nested-modal-buttons .delete-button {
+.modal-container .nested-modal-buttons .delete-button {
     color: #ed4956;
     background: #fff;
 }
 
-.nested-modal-buttons .cancel-button {
+.modal-container .nested-modal-buttons .cancel-button {
     background: none;
     color: #262626;
     font-weight: 400;
 }
 
 /* 해시태그 관련 */
-.content-input {
+.modal-container .content-input {
     position: relative;
     padding: 10px 14px;
 }
 
-.hashtag-suggestions {
+.modal-container .hashtag-suggestions {
     position: absolute;
     top: 100%;
     left: 0;
@@ -441,7 +437,7 @@
     display: none;
 }
 
-.hashtag-item {
+.modal-container .hashtag-item {
     padding: 8px 16px;
     display: flex;
     align-items: center;
@@ -449,22 +445,22 @@
     transition: background-color 0.2s;
 }
 
-.hashtag-item:hover {
+.modal-container .hashtag-item:hover {
     background-color: #fafafa;
 }
 
-.hashtag-info {
+.modal-container .hashtag-info {
     display: flex;
     flex-direction: column;
 }
 
-.hashtag-name {
+.modal-container .hashtag-name {
     font-size: 14px;
     font-weight: 600;
     color: #262626;
 }
 
-.post-count {
+.modal-container .post-count {
     font-size: 12px;
     color: #8e8e8e;
 }

@@ -15,7 +15,7 @@ async function fetchFeeds() {
 }
 
 // 해시태그만 추출해서 링크로 감싸기
-function convertHashtagsToLinks(content) {
+export function convertHashtagsToLinks(content) {
   // #으로 시작하고 공백이나 줄바꿈으로 끝나는 문자열 찾기
   return content.replace(
     /#[\w가-힣]+/g,
@@ -25,7 +25,7 @@ function convertHashtagsToLinks(content) {
 
 
 // 피드의 날짜를 조작
-function formatDate(dateString) {
+export function formatDate(dateString) {
   // 날짜문자열을 날짜객체로 변환
   const date = new Date(dateString);
 

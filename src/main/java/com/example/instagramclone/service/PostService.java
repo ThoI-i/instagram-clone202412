@@ -4,11 +4,13 @@ import com.example.instagramclone.domain.hashtag.entity.Hashtag;
 import com.example.instagramclone.domain.hashtag.entity.PostHashtag;
 import com.example.instagramclone.domain.member.entity.Member;
 import com.example.instagramclone.domain.post.dto.request.PostCreate;
+import com.example.instagramclone.domain.post.dto.response.PostDetailResponse;
 import com.example.instagramclone.domain.post.dto.response.PostResponse;
 import com.example.instagramclone.domain.post.entity.Post;
 import com.example.instagramclone.domain.post.entity.PostImage;
 import com.example.instagramclone.exception.ErrorCode;
 import com.example.instagramclone.exception.MemberException;
+import com.example.instagramclone.exception.PostException;
 import com.example.instagramclone.repository.HashtagRepository;
 import com.example.instagramclone.repository.MemberRepository;
 import com.example.instagramclone.repository.PostRepository;
@@ -139,5 +141,17 @@ public class PostService {
         }
 
     }
+
+    // 피드 단일 조회 처리
+    @Transactional(readOnly = true)
+    public PostDetailResponse getPostDetails(Long postId) {
+        Post post = postRepository.findPostDetailById(postId)
+                .orElseThrow(
+                        () -> new PostException(ErrorCode.POST_NOT_FOUND)
+                );
+
+        return PostDetailResponse.from(post);
+    }
+
 
 }

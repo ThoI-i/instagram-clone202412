@@ -26,7 +26,7 @@
         <!-- Image Carousel -->
         <div class="modal-carousel-container">
             <div class="carousel-container">
-
+                
             </div>
         </div>
 

@@ -4,6 +4,11 @@ import initMoreMenu from './more-menu.js';
 import initSideBar from './side-bar.js';
 import { getCurrentUser } from '../util/auth.js';
 
+const $profileImageContainer = document.querySelector(
+  '.profile-image-container'
+);
+
+
 // 이 페이지의 사용자 이름 추출
 function getPageUsername() {
   // URL에서 가져와야 함
@@ -119,6 +124,60 @@ async function initProfileFeeds() {
 
 }
 
+// 서버로 프로필 사진 전송
+async function handleProfileImage(e) {
+  // console.log('file selected!!', e.target);
+
+  if (!e.target.files.length) return;
+
+  const uploadProfileImage = e.target.files[0];
+
+  // 파일 유효성 검사
+  if (!uploadProfileImage.type.startsWith('image/')) {
+    alert('이미지 파일만 업로드 가능합니다.');
+    return;
+  }
+
+  if (uploadProfileImage.size > 10 * 1024 * 1024) {
+    // 2MB
+    alert('파일 크기는 10MB 이하여야 합니다.');
+    return;
+  }
+
+  // 폼데이터 생성해서 이미지 담기
+  const formData = new FormData();
+  formData.append('profileImage', uploadProfileImage);
+
+  // 서버에 프사 전송하기
+  const response = await fetchWithAuth(`/api/profiles/profile-image`, {
+    method: 'PUT',
+    body: formData
+  });
+
+  if (!response.ok) {
+    alert('프로필 사진 업데이트 실패!');
+    return;
+  }
+
+  const { imageUrl } = await response.json();
+  const $img = $profileImageContainer.querySelector('img');
+  $img.src = imageUrl;
+
+}
+
+// 프로필 사진 업데이트 처리
+async function initChangeProfileImage() {
+
+  // 1. 사용자는 자신의 프로필 사진 박스를 클릭한다.
+  
+  const $fileInput = document.querySelector('input[name=profileImage]');
+  // 2. 이걸 클릭하면 파일 선택창이 떠야함.
+  $profileImageContainer.addEventListener('click', () => { 
+    $fileInput.click();
+  });
+  // 3. 파일 선택 완료시 서버로 프로필 이미지 전송
+  $fileInput.addEventListener('change', handleProfileImage);
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   
@@ -130,5 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
   //===== 프로필 페이지 개별 처리 ===== //
   initProfileHeader(); // 프로필 페이지 헤더 관련
   initProfileFeeds();  // 프로필 페이지 피드 관련
+  initChangeProfileImage(); // 프사 변경 관련
 
 });

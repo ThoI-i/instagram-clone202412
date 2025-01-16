@@ -168,9 +168,18 @@ async function handleProfileImage(e) {
 // 프로필 사진 업데이트 처리
 async function initChangeProfileImage() {
 
+  const $fileInput = document.querySelector('input[name=profileImage]');
+  // 0. 본인 페이지가 아니면 나가세요
+  const match = await isUserMatched();
+
+  if (!match) {
+    $profileImageContainer.querySelector('.profile-image').style.cursor = 'default';
+    $fileInput.disabled = true;
+    return;
+  }
+
   // 1. 사용자는 자신의 프로필 사진 박스를 클릭한다.
   
-  const $fileInput = document.querySelector('input[name=profileImage]');
   // 2. 이걸 클릭하면 파일 선택창이 떠야함.
   $profileImageContainer.addEventListener('click', () => { 
     $fileInput.click();

@@ -6,6 +6,7 @@ import com.example.instagramclone.domain.post.entity.PostImage;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface PostRepository {
@@ -27,5 +28,8 @@ public interface PostRepository {
 
     // 특정 사용자의 프로필 페이지 전용 피드 목록 조회
     List<ProfilePostResponse> findProfilePosts(Long memberId);
+
+    // 단일 피드 상세조회
+    Optional<Post> findPostDetailById(Long postId);
 
 }

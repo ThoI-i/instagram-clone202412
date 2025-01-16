@@ -8,12 +8,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/profiles")
@@ -53,6 +52,20 @@ public class ProfileController {
         List<ProfilePostResponse> responseList = profileService.findProfilePosts(username);
 
         return ResponseEntity.ok().body(responseList);
+    }
+
+    // 프로필 사진 업로드 API
+    @PutMapping("/profile-image")
+    public ResponseEntity<?> updateProfile(
+            @AuthenticationPrincipal String username,
+            @RequestParam MultipartFile profileImage
+    ) {
+        String imageUrl = profileService.updateProfileImage(profileImage, username);
+
+        return ResponseEntity.ok().body(Map.of(
+                "imageUrl", imageUrl,
+                "message", "image upload success"
+        ));
     }
 
 

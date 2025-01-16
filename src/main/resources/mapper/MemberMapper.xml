@@ -27,4 +27,12 @@
         FROM users
         WHERE username = #{username}
     </select>
+
+    <!--    프로필 사진 수정 -->
+    <update id="updateProfileImage">
+        UPDATE users
+        SET profile_image_url = #{imageUrl},
+        updated_at        = NOW()
+        WHERE username = #{username}
+    </update>
 </mapper>

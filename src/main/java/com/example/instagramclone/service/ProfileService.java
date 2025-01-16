@@ -8,10 +8,12 @@ import com.example.instagramclone.exception.ErrorCode;
 import com.example.instagramclone.exception.MemberException;
 import com.example.instagramclone.repository.MemberRepository;
 import com.example.instagramclone.repository.PostRepository;
+import com.example.instagramclone.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,6 +26,8 @@ public class ProfileService {
 
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+
+    private final FileUploadUtil fileUploadUtil;
 
     /**
      * 로그인한 유저 정보를 반환하는 처리
@@ -62,4 +66,17 @@ public class ProfileService {
                         () -> new MemberException(ErrorCode.MEMBER_NOT_FOUND)
                 );
     }
+
+    // 프로필 사진 처리
+    public String updateProfileImage(MultipartFile profileImage, String username) {
+        // 1. 프로필 사진 이미지 파일을 서버에 저장
+        String uploadPath = fileUploadUtil.saveFile(profileImage);
+
+        // 2. 데이터베이스 업데이트
+        memberRepository.updateProfileImage(uploadPath, username);
+
+        // 3. 업로드 경로를 리턴하여 화면에 바로 렌더링
+        return uploadPath;
+    }
+
 }

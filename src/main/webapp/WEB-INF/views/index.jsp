@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/css/feed.css">
     <link rel="stylesheet" href="/css/suggestions.css">
     <link rel="stylesheet" href="/css/modal.css">
+    <link rel="stylesheet" href="/css/like.css">
 
     <!-- Modular JS -->
     <script src="/js/index.js" type="module" defer></script>

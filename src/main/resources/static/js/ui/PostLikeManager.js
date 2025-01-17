@@ -1,4 +1,3 @@
-
 import { fetchWithAuth } from "../util/api.js";
 
 // 좋아요 기능을 관리하는 클래스
@@ -23,7 +22,7 @@ class PostLikeManager {
     // 좋아요 토글 이벤트 바인딩
     this.$likeButton.onclick = async (e) => { 
       e.preventDefault();
-
+      
       // 서버에 좋아요 토글 요청 보내기
       const response = await fetchWithAuth(`/api/posts/${this.postId}/likes`, {
         method: 'POST'
@@ -32,11 +31,13 @@ class PostLikeManager {
         alert('좋아요 처리 실패!');
         return;
       }
-
       const likeStatus = await response.json();
       // console.log(likeStatus);
       this.updateUI(likeStatus);
     };
+    // 더블 클릭 이벤트 바인딩
+    this.addDoubleClickLike();
+
   }
 
   // 좋아요 UI처리
@@ -48,12 +49,38 @@ class PostLikeManager {
 
     // 좋아요 수 처리
     this.$likeCount.textContent = likeCount;
+
     // 만약 토글한 위치가 프로필 페이지라면
     // 프로필 페이지 피드의 전체좋아요 수도 동적으로 바뀌어야 한다.
     const $gridItem = document.querySelector(`.grid-item[data-post-id="${this.postId}"]`);
     if ($gridItem) {
       $gridItem.querySelector('.grid-likes-count').textContent = likeCount;
     }
+
+  }
+
+  // 더블클릭 좋아요 기능
+  addDoubleClickLike() {
+    // 캐러셀 컨테이너에 더블클릭 이벤트 바인딩
+    const $carousel = this.$container.querySelector('.carousel-container');
+    $carousel.ondblclick = () => { 
+      this.$likeButton.click();
+
+      // 하트 애니메이션 표시
+      const $heartAnimation = document.createElement('div');
+      $heartAnimation.classList.add('heart-animation');
+      $heartAnimation.innerHTML = '<i class="fa-solid fa-heart"></i>';
+
+      $carousel.append($heartAnimation);
+
+      // 1초 후 애니메이션이 끝나면 하트 박스 삭제
+      setTimeout(() => { 
+        $heartAnimation.remove();
+      }, 1000);
+
+    };
   }
 
 }
+
+export default PostLikeManager;

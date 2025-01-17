@@ -93,10 +93,12 @@ function renderProfileFeeds(feedList) {
                 <div class="grid-item-overlay">
                     <div class="grid-item-stats">
                         <span>
-                            <i class="fa-solid fa-heart"></i> ${feed.likeCount}
+                            <i class="fa-solid fa-heart"></i> 
+                            <span class="grid-likes-count">${feed.likeCount}</span>
                         </span>
                         <span>
-                            <i class="fa-solid fa-comment"></i> ${feed.commentCount}
+                            <i class="fa-solid fa-comment"></i>
+                            <span class="grid-comments-count">${feed.commentCount}</span>
                         </span>
                     </div>
                 </div>

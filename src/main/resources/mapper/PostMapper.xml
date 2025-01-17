@@ -82,13 +82,22 @@
     <select id="findProfilePosts" resultType="ProfilePostResponse">
         SELECT
         p.id,
-        pi.image_url as mainThumbnail
+        pi.image_url as mainThumbnail,
+        NVL(l.likeCount, 0) AS likeCount
         FROM posts p
         INNER JOIN
-        (SELECT post_id, image_url
+        (
+        SELECT post_id, image_url
         FROM post_images
-        WHERE image_order = 1) pi
+        WHERE image_order = 1
+        ) pi
         ON p.id = pi.post_id
+        LEFT JOIN (
+        SELECT post_id, COUNT(*) AS likeCount
+        FROM post_likes
+        GROUP BY post_id
+        ) l
+        ON p.id = l.post_id
         WHERE p.member_id = #{memberId}
         ORDER BY p.created_at DESC
     </select>

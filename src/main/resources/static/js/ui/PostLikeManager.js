@@ -1,3 +1,4 @@
+
 import { fetchWithAuth } from "../util/api.js";
 
 // 좋아요 기능을 관리하는 클래스
@@ -22,7 +23,7 @@ class PostLikeManager {
     // 좋아요 토글 이벤트 바인딩
     this.$likeButton.onclick = async (e) => { 
       e.preventDefault();
-      
+
       // 서버에 좋아요 토글 요청 보내기
       const response = await fetchWithAuth(`/api/posts/${this.postId}/likes`, {
         method: 'POST'
@@ -47,8 +48,12 @@ class PostLikeManager {
 
     // 좋아요 수 처리
     this.$likeCount.textContent = likeCount;
+    // 만약 토글한 위치가 프로필 페이지라면
+    // 프로필 페이지 피드의 전체좋아요 수도 동적으로 바뀌어야 한다.
+    const $gridItem = document.querySelector(`.grid-item[data-post-id="${this.postId}"]`);
+    if ($gridItem) {
+      $gridItem.querySelector('.grid-likes-count').textContent = likeCount;
+    }
   }
 
 }
-
-export default PostLikeManager;

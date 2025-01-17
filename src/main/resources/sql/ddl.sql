@@ -6,12 +6,12 @@ CREATE DATABASE instagram_clone
 -- 게시물 테이블
 CREATE TABLE posts
 (
-    id         BIGINT AUTO_INCREMENT PRIMARY KEY, -- BIGINT = LONG(자바)
-    content    TEXT, -- 다량의 문자 저장을 위해 TEXT로
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    content    TEXT,
     writer     VARCHAR(100) NOT NULL,
     view_count INT       DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성 시간
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- 수정 시간
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- 게시물 이미지 테이블
@@ -50,6 +50,7 @@ CREATE TABLE post_hashtags
 CREATE INDEX idx_hashtag_name ON hashtags (name);
 CREATE INDEX idx_post_hashtags_post_id ON post_hashtags (post_id);
 CREATE INDEX idx_post_hashtags_hashtag_id ON post_hashtags (hashtag_id);
+
 
 -- 회원 테이블
 CREATE TABLE users
@@ -90,3 +91,21 @@ ALTER TABLE posts
 
 -- 인덱스 추가
 CREATE INDEX idx_posts_member_id ON posts (member_id);
+
+
+-- 좋아요 테이블
+CREATE TABLE post_likes
+(
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    post_id    BIGINT NOT NULL,
+    member_id  BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
+    FOREIGN KEY (member_id) REFERENCES users (id) ON DELETE CASCADE,
+    UNIQUE KEY unique_post_member (post_id, member_id)
+);
+
+-- 인덱스 추가
+CREATE INDEX idx_post_likes_post_id ON post_likes (post_id);
+CREATE INDEX idx_post_likes_member_id ON post_likes (member_id);

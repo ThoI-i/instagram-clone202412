@@ -33,7 +33,7 @@ public class PostController {
 
         log.info("피드에서 인증된 사용자명: {}", username);
 
-        List<PostResponse> allFeeds = postService.findAllFeeds();
+        List<PostResponse> allFeeds = postService.findAllFeeds(username);
 
         return ResponseEntity
                 .ok()

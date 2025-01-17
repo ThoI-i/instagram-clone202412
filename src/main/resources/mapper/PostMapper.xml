@@ -28,14 +28,22 @@
 
     <select id="findAll" resultMap="PostResultMap">
         SELECT
-        p.*
+        p.id
+        , p.content
+        , p.created_at
         , u.username
         , u.profile_image_url
+        , u.name
+        , pi.id AS image_id
+        , pi.image_url
+        , pi.image_order
         FROM posts p
         INNER JOIN users u
         ON u.id = p.member_id
+        INNER JOIN post_images pi
+        ON p.id = pi.post_id
         ORDER BY
-        created_at DESC, id DESC
+        p.created_at DESC, p.id DESC, pi.image_order ASC
     </select>
 
     <resultMap id="PostResultMap" type="Post">

@@ -77,9 +77,12 @@ function truncateContent(writer, content, maxLength = 20) {
 
 
 // 한개의 피드를 렌더링하는 함수
-function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, images, createdAt }) {
+function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, images, createdAt, likeStatus }) {
 
-  // const makeImageTags = (images) => { 
+
+  const { liked, likeCount } = likeStatus;
+
+  // const makeImageTags = (images) => {
   //   let imgTag = '';
   //   for (const img of images) {
   //     imgTag += `<img src="${img.imageUrl}">`;
@@ -142,12 +145,12 @@ function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, i
           }
         </div>
       </div>
-      
+
       <div class="post-actions">
         <div class="post-buttons">
           <div class="post-buttons-left">
-            <button class="action-button like-button">
-              <i class="fa-regular fa-heart"></i>
+            <button class="action-button like-button ${liked ? 'liked' : ''}">
+              <i class="${liked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
             </button>
             <button class="action-button comment-button">
               <i class="fa-regular fa-comment"></i>
@@ -161,7 +164,7 @@ function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, i
           </button>
         </div>
         <div class="post-likes">
-          좋아요 <span class="likes-count">0</span>개
+          좋아요 <span class="likes-count">${likeCount}</span>개
         </div>
       </div>
       

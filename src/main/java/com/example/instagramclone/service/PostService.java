@@ -2,6 +2,7 @@ package com.example.instagramclone.service;
 
 import com.example.instagramclone.domain.hashtag.entity.Hashtag;
 import com.example.instagramclone.domain.hashtag.entity.PostHashtag;
+import com.example.instagramclone.domain.like.dto.response.LikeStatusResponse;
 import com.example.instagramclone.domain.member.entity.Member;
 import com.example.instagramclone.domain.post.dto.request.PostCreate;
 import com.example.instagramclone.domain.post.dto.response.PostDetailResponse;
@@ -13,6 +14,7 @@ import com.example.instagramclone.exception.MemberException;
 import com.example.instagramclone.exception.PostException;
 import com.example.instagramclone.repository.HashtagRepository;
 import com.example.instagramclone.repository.MemberRepository;
+import com.example.instagramclone.repository.PostLikeRepository;
 import com.example.instagramclone.repository.PostRepository;
 import com.example.instagramclone.util.FileUploadUtil;
 import com.example.instagramclone.util.HashtagUtil;
@@ -34,19 +36,27 @@ public class PostService {
     private final PostRepository postRepository; // db에 피드내용 저장, 이미지저장
     private final HashtagRepository hashtagRepository; // 해시태그 db에 저장
     private final MemberRepository memberRepository; // 사용자 정보 가져오기
+    private final PostLikeRepository postLikeRepository; // 좋아요 정보 가져오기
 
     private final FileUploadUtil fileUploadUtil; // 로컬서버에 이미지 저장
     private final HashtagUtil hashtagUtil; // 해시태그 추출기
 
     // 피드 목록조회 중간처리
     @Transactional(readOnly = true)
-    public List<PostResponse> findAllFeeds() {
+    public List<PostResponse> findAllFeeds(String username) {
+
+        Member foundMember = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+
         // 전체 피드 조회
         return postRepository.findAll()
                 .stream()
                 .map(feed -> {
-                    feed.setImages(postRepository.findImagesByPostId(feed.getId()));
-                    return PostResponse.from(feed);
+                    LikeStatusResponse likeStatus = LikeStatusResponse.of(
+                            postLikeRepository.findByPostIdAndMemberId(feed.getId(), foundMember.getId()).isPresent()
+                            , postLikeRepository.countByPostId(feed.getId())
+                    );
+                    return PostResponse.of(feed, likeStatus);
                 })
                 .collect(Collectors.toList());
     }

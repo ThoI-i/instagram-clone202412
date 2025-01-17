@@ -2,6 +2,7 @@
 import { fetchWithAuth } from '../util/api.js';
 import { convertHashtagsToLinks, formatDate } from './feed.js';
 import CarouselManager from '../ui/CarouselManager.js';
+import PostLikeManager from '../ui/PostLikeManager.js';
 
 const $modal = document.querySelector('.post-detail-modal');
 const $backdrop = $modal.querySelector('.modal-backdrop');
@@ -9,12 +10,13 @@ const $closeButton = $modal.querySelector('.modal-close-button');
 const $gridContainer = document.querySelector('.posts-grid');
 
 // 모달에 피드내용 렌더링
-function renderModalContent({ postId, content, createdAt, user, images }) {
+function renderModalContent({ postId, content, createdAt, user, images, likeStatus }) {
 
   // 모달이 렌더링될 때 현재 피드의 id를 모달태그에 발라놓음
   $modal.dataset.postId = postId;
 
   const { username, profileImageUrl } = user;
+  const { liked, likeCount } = likeStatus;
 
   $modal.querySelectorAll('.post-username').forEach(($username) => {
     $username.textContent = username;
@@ -66,15 +68,27 @@ function renderModalContent({ postId, content, createdAt, user, images }) {
                                   : ''
                               }
                            </div>`;
-  
+
   // 캐러셀 만들기
   if (images.length > 1) {
     const carousel
       = new CarouselManager($carouselContainer);
-    
+
     carousel.initWithImgTag([...$carouselContainer.querySelectorAll('img')]);
   }
-  
+
+  // 좋아요 렌더링 및 토글 처리
+  const $likeButton = $modal.querySelector('.like-button');
+  const $heartIcon = $modal.querySelector('.like-button i');
+  const $likeCount = $modal.querySelector('.likes-count');
+
+  $likeButton.classList.toggle('liked', liked);
+  $heartIcon.className = liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+  $likeCount.textContent = likeCount;
+
+  // 토글 처리
+  new PostLikeManager($modal);
+
 }
 
 function findAdjacentPostIds(currentId) {
@@ -91,7 +105,7 @@ function findAdjacentPostIds(currentId) {
     prevId: prevId ? prevId : null,
     nextId: nextId ? nextId : null,
   };
-  
+
 }
 
 // 이전, 다음 피드 버튼 업데이트(조건부 렌더링, 서버에 새로운 피드 재요청) 처리
@@ -126,7 +140,7 @@ function updateFeedNavigation(currentId) {
 
 // 모달 열기
 async function openModal(postId) {
-  
+
   // 서버에 데이터 요청
   const response = await fetchWithAuth(`/api/posts/${postId}`);
 
@@ -143,7 +157,7 @@ async function openModal(postId) {
 
   // 이전, 다음 피드 렌더링 처리
   updateFeedNavigation(postId);
-  
+
 
   // 모달 디스플레이 변경
   $modal.style.display = 'flex';
@@ -164,7 +178,7 @@ function handleKeyPress(e) {
   if ($modal.style.display === 'none') return;
 
   const currentPostId = $modal.dataset.postId;
-  
+
   const {prevId, nextId} = findAdjacentPostIds(currentPostId);
 
   if (prevId && e.key === 'ArrowLeft') {

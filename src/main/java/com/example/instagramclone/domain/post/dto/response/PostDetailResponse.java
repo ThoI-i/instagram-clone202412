@@ -1,5 +1,6 @@
 package com.example.instagramclone.domain.post.dto.response;
 
+import com.example.instagramclone.domain.like.dto.response.LikeStatusResponse;
 import com.example.instagramclone.domain.member.dto.response.MeResponse;
 import com.example.instagramclone.domain.post.entity.Post;
 import lombok.*;
@@ -25,7 +26,10 @@ public class PostDetailResponse {
     // 피드 이미지 목록
     private List<PostImageResponse> images;
 
-    public static PostDetailResponse from(Post post) {
+    // 좋아요 상태
+    private LikeStatusResponse likeStatus;
+
+    public static PostDetailResponse of(Post post, LikeStatusResponse likeStatus) {
 
 //        List<PostImage> imageEntities = post.getImages();
 //        List<PostImageResponse> imageResponses = new ArrayList<>();
@@ -44,6 +48,7 @@ public class PostDetailResponse {
                 .images(post.getImages().stream()
                         .map(PostImageResponse::from)
                         .collect(Collectors.toList()))
+                .likeStatus(likeStatus)
                 .build();
     }
 }

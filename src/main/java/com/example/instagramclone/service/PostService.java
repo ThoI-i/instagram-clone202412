@@ -154,13 +154,18 @@ public class PostService {
 
     // 피드 단일 조회 처리
     @Transactional(readOnly = true)
-    public PostDetailResponse getPostDetails(Long postId) {
+    public PostDetailResponse getPostDetails(Long postId, String username) {
         Post post = postRepository.findPostDetailById(postId)
                 .orElseThrow(
                         () -> new PostException(ErrorCode.POST_NOT_FOUND)
                 );
 
-        return PostDetailResponse.from(post);
+        Member foundMember = memberRepository.findByUsername(username).orElseThrow();
+
+        return PostDetailResponse.of(post, LikeStatusResponse.of(
+                postLikeRepository.findByPostIdAndMemberId(postId, foundMember.getId()).isPresent()
+                , postLikeRepository.countByPostId(postId)
+        ));
     }
 
 

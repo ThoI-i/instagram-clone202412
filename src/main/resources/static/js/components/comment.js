@@ -51,6 +51,13 @@ export function createComment($form) {
       $commentsList.innerHTML += createCommentHTML(comment);
     }
 
+    // 여기가 프로필페이지면 썸네일의 댓글 수 동기화
+    const $profilePage = $form.closest('.profile-page');
+    if ($profilePage) {
+      const $gridItem = $profilePage.querySelector(`.grid-item[data-post-id="${postId}"]`);
+      $gridItem.querySelector('.grid-comments-count').textContent = commentCount;
+    }
+
   }
   // ======================= //
 

@@ -1,4 +1,5 @@
 
+
 import CarouselManager from "../ui/CarouselManager.js";
 import PostLikeManager from "../ui/PostLikeManager.js";
 import { fetchWithAuth } from "../util/api.js";
@@ -43,14 +44,14 @@ export function formatDate(dateString) {
   if (diff < 60 * 60 * 24 * 7) return `${Math.floor(diff / (60 * 60 * 24))}일 전`;
 
   return new Intl.DateTimeFormat(
-    'ko-KR', 
+    'ko-KR',
     {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     }
   ).format(date);
-  
+
 }
 
 // 텍스트 길이에 따른 더보기 처리 함수
@@ -78,12 +79,12 @@ function truncateContent(writer, content, maxLength = 20) {
 
 
 // 한개의 피드를 렌더링하는 함수
-function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, images, createdAt, likeStatus }) {
+function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, images, createdAt, likeStatus, commentCount }) {
 
 
   const { liked, likeCount } = likeStatus;
 
-  // const makeImageTags = (images) => { 
+  // const makeImageTags = (images) => {
   //   let imgTag = '';
   //   for (const img of images) {
   //     imgTag += `<img src="${img.imageUrl}">`;
@@ -96,7 +97,9 @@ function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, i
       <div class="post-header">
         <div class="post-user-info">
           <div class="post-profile-image">
-            <img src="${profileImageUrl || '/images/default-profile.svg'}" alt="프로필 이미지">
+            <img src="${
+              profileImageUrl || '/images/default-profile.svg'
+            }" alt="프로필 이미지">
           </div>
           <div class="post-user-details">
             <a href="/${username}" class="post-username">
@@ -146,7 +149,7 @@ function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, i
           }
         </div>
       </div>
-      
+
       <div class="post-actions">
         <div class="post-buttons">
           <div class="post-buttons-left">
@@ -168,7 +171,7 @@ function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, i
           좋아요 <span class="likes-count">${likeCount}</span>개
         </div>
       </div>
-      
+
 
       <div class="post-content">
         <div class="post-text">
@@ -180,8 +183,22 @@ function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, i
             ${formatDate(createdAt)}
         </div>
       </div>
-      
+
       <div class="post-comments">
+
+          <!-- 댓글이 있을 때만 버튼 표시 -->
+          ${
+            commentCount > 0
+              ? `
+            <!-- 댓글 미리보기 -->
+            <div class="comments-preview">
+              <button class="view-comments-button">
+                댓글 ${commentCount}개 모두 보기
+              </button>
+            </div>`
+              : ''
+          }
+
         <form class="comment-form">
           <input type="text" placeholder="댓글 달기..." class="comment-input">
           <button type="submit" class="comment-submit-btn" disabled>게시</button>
@@ -206,8 +223,8 @@ async function renderFeed() {
   const $caroulselContainerList = [...document.querySelectorAll('.carousel-container')];
 
   // 2. 각각 캐러셀매니저를 걸어줌
-  $caroulselContainerList.forEach($carousel => { 
-    
+  $caroulselContainerList.forEach($carousel => {
+
     // 이미지가 단 한개인 슬라이드에서는 이전, 다음버튼이 없어서 에러가 나는 상황
     const $images = [...$carousel.querySelectorAll('.carousel-track img')];
 
@@ -223,9 +240,9 @@ async function renderFeed() {
   // 더 보기 버튼 이벤트 처리
   const $moreButtons = [...document.querySelectorAll('.more-button')];
 
-  $moreButtons.forEach($btn => { 
+  $moreButtons.forEach($btn => {
 
-    $btn.addEventListener('click', e => { 
+    $btn.addEventListener('click', e => {
       const $captionDiv = $btn.closest('.post-text');
       const $truncatedSpan = $captionDiv.querySelector('.truncated-text');
       const $fullSpan = $captionDiv.querySelector('.full-text');

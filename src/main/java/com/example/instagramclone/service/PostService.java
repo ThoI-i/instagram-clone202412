@@ -12,10 +12,7 @@ import com.example.instagramclone.domain.post.entity.PostImage;
 import com.example.instagramclone.exception.ErrorCode;
 import com.example.instagramclone.exception.MemberException;
 import com.example.instagramclone.exception.PostException;
-import com.example.instagramclone.repository.HashtagRepository;
-import com.example.instagramclone.repository.MemberRepository;
-import com.example.instagramclone.repository.PostLikeRepository;
-import com.example.instagramclone.repository.PostRepository;
+import com.example.instagramclone.repository.*;
 import com.example.instagramclone.util.FileUploadUtil;
 import com.example.instagramclone.util.HashtagUtil;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +34,7 @@ public class PostService {
     private final HashtagRepository hashtagRepository; // 해시태그 db에 저장
     private final MemberRepository memberRepository; // 사용자 정보 가져오기
     private final PostLikeRepository postLikeRepository; // 좋아요 정보 가져오기
+    private final CommentRepository commentRepository; // 댓글 정보 가져오기
 
     private final FileUploadUtil fileUploadUtil; // 로컬서버에 이미지 저장
     private final HashtagUtil hashtagUtil; // 해시태그 추출기
@@ -56,7 +54,8 @@ public class PostService {
                             postLikeRepository.findByPostIdAndMemberId(feed.getId(), foundMember.getId()).isPresent()
                             , postLikeRepository.countByPostId(feed.getId())
                     );
-                    return PostResponse.of(feed, likeStatus);
+                    long commentCount = commentRepository.countByPostId(feed.getId());
+                    return PostResponse.of(feed, likeStatus, commentCount);
                 })
                 .collect(Collectors.toList());
     }

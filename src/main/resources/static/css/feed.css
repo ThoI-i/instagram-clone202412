@@ -251,7 +251,7 @@
 .comment-form {
     display: flex;
     align-items: center;
-    border-top: 1px solid #efefef;
+    /* border-top: 1px solid #efefef; */
 }
 
 .comment-input {
@@ -343,6 +343,19 @@
     white-space: pre-wrap;  /* 줄바꿈 유지 */
 }
 
+/* '댓글 모두 보기' 버튼 */
+.view-comments-button {
+    border: none;
+    background: none;
+    color: #8e8e8e;
+    font-size: 14px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.view-comments-button:hover {
+    color: #262626;
+}
 
 /* 반응형 스타일 */
 @media (max-width: 640px) {

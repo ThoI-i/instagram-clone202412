@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.instagramclone.repository.CommentRepository">
+
+    <!-- Comment 엔티티 매핑 설정 -->
+    <resultMap id="CommentResultMap" type="Comment">
+        <id property="id" column="id"/>
+        <result property="postId" column="post_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <!-- Member 정보 매핑 -->
+        <association property="member" javaType="Member">
+            <id property="id" column="member_id"/>
+            <result property="username" column="username"/>
+            <result property="profileImageUrl" column="profile_image_url"/>
+        </association>
+    </resultMap>
+
+    <!-- 댓글 생성 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO comments
+        (post_id,
+        member_id,
+        content)
+        VALUES
+        (#{postId},
+        #{memberId},
+        #{content})
+    </insert>
+
+    <!-- 댓글 목록 조회 -->
+    <select id="findByPostId" resultMap="CommentResultMap">
+        SELECT
+        c.id,
+        c.content,
+        c.created_at,
+        c.member_id,
+        u.username,
+        u.profile_image_url
+        FROM comments c
+        INNER JOIN users u
+        ON c.member_id = u.id
+        WHERE c.post_id = #{postId}
+        ORDER BY c.created_at
+    </select>
+
+    <!-- 댓글 수 조회 -->
+    <select id="countByPostId" resultType="long">
+        SELECT COUNT(*)
+        FROM comments
+        WHERE post_id = #{postId}
+    </select>
+
+    <!-- 댓글 단일 조회 -->
+    <select id="findById" resultMap="CommentResultMap">
+        SELECT
+        c.id,
+        c.content,
+        c.created_at,
+        c.member_id,
+        u.username,
+        u.profile_image_url
+        FROM comments c
+        INNER JOIN users u
+        ON c.member_id = u.id
+        WHERE c.id = #{id}
+    </select>
+
+</mapper>

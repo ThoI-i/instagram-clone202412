@@ -57,6 +57,19 @@ class PostLikeManager {
       $gridItem.querySelector('.grid-likes-count').textContent = likeCount;
     }
 
+    // 만약 토글한 위치가 전체피드목록 페이지면
+    // 피드 목록의 좋아요 수와 상태를 수동으로 바꿔줘야 함
+    const $feed = document.querySelector(`.post[data-post-id="${this.postId}"]`);
+    if ($feed) {
+      $feed.querySelector('.likes-count').textContent = likeCount;
+
+      const $likeBtn = $feed.querySelector('.like-button');
+      $likeBtn.classList.toggle('liked', liked);
+      $likeBtn.querySelector('i').className = liked
+        ? 'fa-solid fa-heart'
+        : 'fa-regular fa-heart';
+    }
+
   }
 
   // 더블클릭 좋아요 기능

@@ -222,6 +222,8 @@
 
 .comment-text {
     color: #262626;
+    font-size: 14px;
+    margin-left: 5px;
 }
 
 .comment-actions {

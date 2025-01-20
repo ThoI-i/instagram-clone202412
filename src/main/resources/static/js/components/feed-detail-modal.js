@@ -3,6 +3,9 @@ import { fetchWithAuth } from '../util/api.js';
 import { convertHashtagsToLinks, formatDate } from './feed.js';
 import CarouselManager from '../ui/CarouselManager.js';
 import PostLikeManager from '../ui/PostLikeManager.js';
+import { createComment } from './comment.js';
+
+
 
 const $modal = document.querySelector('.post-detail-modal');
 const $backdrop = $modal.querySelector('.modal-backdrop');
@@ -10,13 +13,12 @@ const $closeButton = $modal.querySelector('.modal-close-button');
 const $gridContainer = document.querySelector('.posts-grid');
 
 
-
-// 댓글 HTML 생성
-function createCommentHTML(comment) {
+// 댓글 하나의 HTML 생성
+export function createCommentHTML(comment) {
   return `
     <div class="comment-item">
       <div class="post-profile-image">
-        <img src="${comment.userProfileImage ?? '/images/default-profile.svg'}"
+        <img src="${comment.userProfileImage ?? '/images/default-profile.svg'}" 
              alt="프로필 이미지">
       </div>
       <div class="comment-content">
@@ -113,12 +115,12 @@ function renderModalContent({ postId, content, createdAt, user, images, likeStat
                                   : ''
                               }
                            </div>`;
-
+  
   // 캐러셀 만들기
   if (images.length > 1) {
     const carousel
       = new CarouselManager($carouselContainer);
-
+    
     carousel.initWithImgTag([...$carouselContainer.querySelectorAll('img')]);
   }
 
@@ -137,6 +139,9 @@ function renderModalContent({ postId, content, createdAt, user, images, likeStat
   // 댓글 목록 렌더링
   renderComments(comments);
 
+  // 댓글 form 이벤트 처리
+  createComment($modal.querySelector('.comment-form'));
+  
 }
 
 function findAdjacentPostIds(currentId) {
@@ -153,7 +158,7 @@ function findAdjacentPostIds(currentId) {
     prevId: prevId ? prevId : null,
     nextId: nextId ? nextId : null,
   };
-
+  
 }
 
 // 이전, 다음 피드 버튼 업데이트(조건부 렌더링, 서버에 새로운 피드 재요청) 처리
@@ -188,7 +193,7 @@ function updateFeedNavigation(currentId) {
 
 // 모달 열기
 export async function openModal(postId) {
-
+  
   // 서버에 데이터 요청
   const response = await fetchWithAuth(`/api/posts/${postId}`);
 
@@ -205,7 +210,7 @@ export async function openModal(postId) {
 
   // 이전, 다음 피드 렌더링 처리
   updateFeedNavigation(postId);
-
+  
 
   // 모달 디스플레이 변경
   $modal.style.display = 'flex';

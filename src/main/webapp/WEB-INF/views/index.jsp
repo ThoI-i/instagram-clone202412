@@ -26,7 +26,7 @@
     <script src="/js/index.js" type="module" defer></script>
 </head>
 <body>
-<div class="container">
+<div class="container feed-page">
     <!-- Left Sidebar -->
     <%@ include file="components/sidebar.jsp" %> <!-- 네비게이션 메뉴 -->
 

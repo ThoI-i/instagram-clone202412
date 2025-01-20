@@ -24,7 +24,7 @@
     <script src="/js/components/profile-page.js" type="module" defer></script>
 </head>
 <body>
-<div class="container">
+<div class="container profile-page">
     <!-- Left Sidebar -->
     <%@ include file="./sidebar.jsp" %>
 

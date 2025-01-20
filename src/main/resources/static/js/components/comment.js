@@ -1,5 +1,5 @@
-
 import { fetchWithAuth } from "../util/api.js";
+import { openModal } from "./feed-detail-modal.js";
 
 
 // 댓글 등록 요청 처리 (피드 목록 - 여러개 의 입력, 상세보기 모달 - 하나의 입력)
@@ -26,6 +26,10 @@ export function createComment($form) {
             </button>
         `;
         $form.before($commentPreview);
+
+        // 댓글 n개보기에 이벤트 걸기
+        $commentPreview.addEventListener('click', () => openModal(postId));
+
       } else {
         const $viewCommentsBtn = $feed.querySelector('.view-comments-button');
         $viewCommentsBtn.textContent = `댓글 ${commentCount}개 모두 보기`;

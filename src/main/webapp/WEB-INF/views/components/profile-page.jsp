@@ -102,10 +102,10 @@
             <!-- Grid Items will be dynamically added here -->
         </div>
     </main>
+
+    <%@ include file="./create-post-modal.jsp" %>
+    <%@ include file="./feed-detail-modal.jsp" %>
 </div>
 
-
-<%@ include file="./create-post-modal.jsp" %>
-<%@ include file="./feed-detail-modal.jsp" %>
 </body>
 </html>

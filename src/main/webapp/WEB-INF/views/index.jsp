@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="/css/suggestions.css">
     <link rel="stylesheet" href="/css/modal.css">
     <link rel="stylesheet" href="/css/like.css">
+    <link rel="stylesheet" href="/css/feed-detail-modal.css">
 
     <!-- Modular JS -->
     <script src="/js/index.js" type="module" defer></script>
@@ -43,6 +44,7 @@
 
 
     <%@ include file="components/create-post-modal.jsp" %> <!-- 모달 섹션 -->
+    <%@ include file="components/feed-detail-modal.jsp" %> <!-- 상세보기 모달 섹션 -->
 </div>
 </body>
 </html>

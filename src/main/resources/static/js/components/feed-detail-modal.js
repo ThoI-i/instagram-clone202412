@@ -9,8 +9,53 @@ const $backdrop = $modal.querySelector('.modal-backdrop');
 const $closeButton = $modal.querySelector('.modal-close-button');
 const $gridContainer = document.querySelector('.posts-grid');
 
+
+
+// 댓글 HTML 생성
+function createCommentHTML(comment) {
+  return `
+    <div class="comment-item">
+      <div class="post-profile-image">
+        <img src="${comment.userProfileImage ?? '/images/default-profile.svg'}"
+             alt="프로필 이미지">
+      </div>
+      <div class="comment-content">
+        <div>
+          <a href="/${comment.username}" class="post-username">
+            ${comment.username}
+          </a>
+          <span class="comment-text">${convertHashtagsToLinks(comment.content)}</span>
+        </div>
+        <div class="post-time">${formatDate(comment.createdAt)}</div>
+      </div>
+    </div>
+  `;
+}
+
+
+// 댓글 목록 렌더링
+function renderComments(comments) {
+  const $commentsList = $modal.querySelector('.comments-list');
+
+  if (comments.length > 0) {
+    $commentsList.innerHTML = comments.map(createCommentHTML).join('');
+  } else {
+    $commentsList.innerHTML = `
+    <div class="no-comments-container">
+      <div class="no-comments">
+        아직 댓글이 없습니다.
+      </div>
+      <div class="no-comments__additional">
+        댓글을 남겨보세요.
+      </div>
+    </div>
+    `;
+  }
+}
+
+
 // 모달에 피드내용 렌더링
-function renderModalContent({ postId, content, createdAt, user, images, likeStatus }) {
+function renderModalContent({ postId, content, createdAt, user, images, likeStatus, comments }) {
 
   // 모달이 렌더링될 때 현재 피드의 id를 모달태그에 발라놓음
   $modal.dataset.postId = postId;
@@ -89,6 +134,9 @@ function renderModalContent({ postId, content, createdAt, user, images, likeStat
   // 토글 처리
   new PostLikeManager($modal);
 
+  // 댓글 목록 렌더링
+  renderComments(comments);
+
 }
 
 function findAdjacentPostIds(currentId) {
@@ -150,7 +198,7 @@ export async function openModal(postId) {
   }
 
   const feedData = await response.json();
-  // console.log(feedData);
+  console.log(feedData);
 
   // 화면에 렌더링
   renderModalContent(feedData);

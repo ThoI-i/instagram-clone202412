@@ -14,14 +14,14 @@ const $profileImageContainer = document.querySelector(
 
 
 // 이 페이지의 사용자 이름 추출
-function getPageUsername() {
+export function getPageUsername() {
   // URL에서 가져와야 함
   const url = window.location.pathname;
   return url.substring(1);
 }
 
 // 현재 페이지에 들어온 사람이 본인인지 확인
-async function isUserMatched() {
+export async function isUserMatched() {
   const pageUsername = getPageUsername();
   const loggedInUser = await getCurrentUser();
   return pageUsername === loggedInUser.username;
@@ -194,7 +194,7 @@ async function initChangeProfileImage() {
   $fileInput.addEventListener('change', handleProfileImage);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   
   //===== 인덱스페이지와 공통 처리 ==== //
   initCreateFeedModal(); // 피드생성 관련 js
@@ -202,9 +202,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initSideBar(); // 사이드바 관련
 
   //===== 프로필 페이지 개별 처리 ===== //
-  initProfileHeader(); // 프로필 페이지 헤더 관련
-  initProfileFeeds();  // 프로필 페이지 피드 관련
-  initChangeProfileImage(); // 프사 변경 관련
+  await initProfileHeader(); // 프로필 페이지 헤더 관련
+  await initProfileFeeds();  // 프로필 페이지 피드 관련
+  await initChangeProfileImage(); // 프사 변경 관련
   initFeedDetailModal();  // 상세보기 모달 관련
   initFollow(); // 팔로우 처리 관련
 

@@ -34,6 +34,8 @@ public enum ErrorCode {
     // 인증 관련
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "잘못된 비밀번호입니다."),
 
+    // 팔로우 관련
+    SELF_FOLLOW(HttpStatus.BAD_REQUEST, "자기 자신을 팔로우 할 수 없습니다."),
     ;
 
     private final HttpStatus status;

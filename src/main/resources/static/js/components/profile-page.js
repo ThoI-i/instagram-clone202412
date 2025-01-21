@@ -1,9 +1,12 @@
+
 import { fetchWithAuth } from '../util/api.js';
 import initCreateFeedModal from './create-feed-modal.js';
 import initMoreMenu from './more-menu.js';
 import initSideBar from './side-bar.js';
 import { getCurrentUser } from '../util/auth.js';
 import initFeedDetailModal from './feed-detail-modal.js';
+import initFollow from './follow.js';
+
 
 const $profileImageContainer = document.querySelector(
   '.profile-image-container'
@@ -38,7 +41,7 @@ async function renderProfileHeader({ feedCount, name, username, profileImageUrl 
 
   // 게시물 수 업데이트
   document.querySelector(
-    '.profile-stats li:first-child .stats-number'
+    '.profile-stats .feed-count'
   ).textContent = feedCount;
 
   // 본인의 페이지인지 타인의 페이지인지에 따라 다른 버튼을 렌더링
@@ -203,5 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initProfileFeeds();  // 프로필 페이지 피드 관련
   initChangeProfileImage(); // 프사 변경 관련
   initFeedDetailModal();  // 상세보기 모달 관련
+  initFollow(); // 팔로우 처리 관련
 
 });

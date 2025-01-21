@@ -320,3 +320,21 @@ CREATE INDEX idx_comments_member_id ON comments (member_id);
 
 SELECT * FROM posts;
 SELECT * FROM comments;
+
+
+-- 팔로우 관련
+CREATE TABLE follows
+(
+    id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+    follower_id  BIGINT NOT NULL, -- 팔로우를 하는 사용자
+    following_id BIGINT NOT NULL, -- 팔로우를 받는 사용자
+    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (follower_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (following_id) REFERENCES users (id) ON DELETE CASCADE,
+    UNIQUE KEY unique_follow (follower_id, following_id)
+);
+
+-- 조회 성능을 위한 인덱스
+CREATE INDEX idx_follows_follower ON follows (follower_id);
+CREATE INDEX idx_follows_following ON follows (following_id);

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.instagramclone.repository.FollowRepository">
+
+    <!-- 팔로우 관계 생성 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO follows (follower_id,
+        following_id)
+        VALUES (#{followerId},
+        #{followingId})
+    </insert>
+
+    <!-- 팔로우 관계 삭제 -->
+    <delete id="delete">
+        DELETE
+        FROM follows
+        WHERE follower_id = #{followerId}
+            AND following_id = #{followingId}
+    </delete>
+
+    <!--    팔로우 여부 확인   -->
+    <select id="doesFollowExist" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM follows
+        WHERE follower_id = #{followerId}
+            AND following_id = #{followingId}
+    </select>
+
+    <!--  특정 유저의  팔로워 / 팔로잉 수 확인   -->
+    <select id="countFollowByType" resultType="long">
+        SELECT COUNT(*)
+        FROM follows
+        WHERE
+        <choose>
+            <when test="type == 'follower'">
+                follower_id = #{userId}
+            </when>
+            <otherwise>
+                following_id = #{userId}
+            </otherwise>
+        </choose>
+    </select>
+
+
+</mapper>

@@ -1,5 +1,6 @@
 package com.example.instagramclone.domain.member.dto.response;
 
+import com.example.instagramclone.domain.follow.dto.response.FollowStatusResponse;
 import com.example.instagramclone.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,14 +17,16 @@ public class ProfileHeaderResponse {
     private String username;
     private String name;
     private long feedCount;  // 총 피드 게시물 수
+    private FollowStatusResponse followStatus; // 팔로우 관련 정보
 
     // 정적 팩토리 메서드
-    public static ProfileHeaderResponse of(Member member, long feedCount) {
+    public static ProfileHeaderResponse of(Member member, long feedCount, FollowStatusResponse followStatus) {
         return ProfileHeaderResponse.builder()
                 .profileImageUrl(member.getProfileImageUrl())
                 .username(member.getUsername())
                 .name(member.getName())
                 .feedCount(feedCount)
+                .followStatus(followStatus)
                 .build();
     }
 }

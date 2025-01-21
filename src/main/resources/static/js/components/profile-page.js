@@ -1,4 +1,3 @@
-
 import { fetchWithAuth } from '../util/api.js';
 import initCreateFeedModal from './create-feed-modal.js';
 import initMoreMenu from './more-menu.js';
@@ -77,6 +76,9 @@ async function initProfileHeader() {
   // 서버에서 프로필 헤더 정보 요청하기
   const response = await fetchWithAuth(`/api/profiles/${username}`);
   const profileHeader = await response.json();
+
+  console.log('profile header data: ', profileHeader);
+  
 
   // 렌더링 진행
   renderProfileHeader(profileHeader);

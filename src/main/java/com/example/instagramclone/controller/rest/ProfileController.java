@@ -1,3 +1,4 @@
+
 package com.example.instagramclone.controller.rest;
 
 import com.example.instagramclone.domain.member.dto.response.MeResponse;
@@ -36,10 +37,11 @@ public class ProfileController {
     // 사용자 프로필 페이지 헤더 데이터를 전송하는 API
     @GetMapping("/{username}")
     public ResponseEntity<ProfileHeaderResponse> getProfileHeader(
-            @PathVariable String username
+            @PathVariable String username,
+            @AuthenticationPrincipal String loginUsername
     ) {
 
-        ProfileHeaderResponse responseData = profileService.getProfileHeader(username);
+        ProfileHeaderResponse responseData = profileService.getProfileHeader(username, loginUsername);
 
         return ResponseEntity.ok().body(responseData);
     }

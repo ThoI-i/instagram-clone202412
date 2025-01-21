@@ -1,5 +1,4 @@
 
-
 import { fetchWithAuth } from '../util/api.js';
 import { getPageUsername, isUserMatched } from './profile-page.js';
 
@@ -45,7 +44,10 @@ async function initFollowButton() {
 
   // 팔로우 토글 기능
   // 팔로우 버튼에 이벤트 처리
-  const $followButton = document.querySelector('.follow-button');
+  let $followButton = document.querySelector('.follow-button');
+  if (!$followButton) {
+    $followButton = document.querySelector('.following-button');
+  }
 
   $followButton.addEventListener('click', async (e) => {
     const { following: isFollowing, followerCount } = await toggleFollow();

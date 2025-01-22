@@ -19,7 +19,7 @@ class FollowServiceTest {
     @DisplayName("특정유저의 팔로워 목록을 조회한다.")
     void getFollowers() {
         //given
-        String target = "kuromi";
+        String target = "mamel";
         String loginName = "kuromi";
         //when
         List<FollowResponse> followers
@@ -28,6 +28,24 @@ class FollowServiceTest {
         System.out.println("\n\n====================");
 
         followers.forEach(System.out::println);
+
+        System.out.println("====================\n\n");
+
+    }
+
+    @Test
+    @DisplayName("특정유저의 팔로잉 목록을 조회한다.")
+    void getFollowing() {
+        //given
+        String target = "mamel";
+        String loginName = "kuromi";
+        //when
+        List<FollowResponse> followings
+                = followService.getFollows(target, loginName, FollowStatus.FOLLOWING);
+        //then
+        System.out.println("\n\n====================");
+
+        followings.forEach(System.out::println);
 
         System.out.println("====================\n\n");
 

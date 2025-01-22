@@ -3,11 +3,12 @@ import { fetchWithAuth } from '../util/api.js';
 import { getPageUsername, isUserMatched } from './profile-page.js';
 
 
+const pageUsername = getPageUsername();
+
 // 서버에 팔로우 토글 요청을 보내기
-async function toggleFollow() {
-  const followingName = getPageUsername();
-  const response = await fetchWithAuth(`/api/follows/${followingName}`, {
-    method: 'POST'
+export async function toggleFollow(targetUsername = pageUsername) {
+  const response = await fetchWithAuth(`/api/follows/${targetUsername}`, {
+    method: 'POST',
   });
 
   return await response.json();

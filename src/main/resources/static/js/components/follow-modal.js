@@ -2,6 +2,7 @@
 import { fetchWithAuth } from "../util/api.js";
 import { getCurrentUser } from "../util/auth.js";
 import { getPageUsername } from "./profile-page.js";
+import { toggleFollow } from "./follow.js";
 
 
 const $modal = document.querySelector('.follow-modal');
@@ -30,14 +31,51 @@ function createUserItem(user, currentUsername) {
     `;
 }
 
+// 팔로우 버튼 UI 업데이트 함수
+function updateFollowButton($button, isFollowing) {
+  // 버튼 스타일과 텍스트 변경
+  $button.classList.toggle('following', isFollowing);
+  $button.textContent = isFollowing ? '팔로잉' : '팔로우';
+
+  // 팔로잉 상태일 때만 호버 이벤트 추가
+  if (isFollowing) {
+    $button.onmouseover = () => {
+      $button.textContent = '언팔로우';
+      $button.classList.add('unfollow-hover');
+    };
+    $button.onmouseout = () => {
+      $button.textContent = '팔로잉';
+      $button.classList.remove('unfollow-hover');
+    };
+  } else {
+    $button.onmouseover = null;
+    $button.onmouseout = null;
+  }
+}
+
+// 팔로잉 카운트 업데이트 함수
+function updateFollowingCount(change) {
+  const $followingCount = document.querySelector('.following-count');
+  if ($followingCount) {
+    const currentCount = $followingCount.textContent;
+    $followingCount.textContent = +currentCount + change;
+  }
+}
+
 // 팔로우 목록 렌더링
 async function renderFollowList(type) {
 
-  // 로그인한 사람 이름
+  // 로그인한 사람 정보
   const currentUser = await getCurrentUser();
 
+  // 로그인한 사람 이름
+  const loggedInUsername = currentUser.username;
+
+  // 페이지 주인 이름
+  const pageUsername = getPageUsername();
+
   // 서버에 목록 요청하기
-  const response = await fetchWithAuth(`/api/follows/${getPageUsername()}/${type}`);
+  const response = await fetchWithAuth(`/api/follows/${pageUsername}/${type}`);
 
   const followList = await response.json();
   
@@ -49,7 +87,33 @@ async function renderFollowList(type) {
   // 각 팔로우 버튼에 이벤트 추가
   $modalBody.querySelectorAll('.follow-button').forEach($button => {
 
+    // 초기 버튼 상태 설정
+    updateFollowButton($button, $button.classList.contains('following'));
 
+    // 버튼을 누르면 팔로우 토글
+    $button.addEventListener('click', async () => { 
+      const { following } = await toggleFollow($button.dataset.username);
+      
+      // 현재 보고있는 페이지가 내 프로필페이지인지 타인 프로필페이지인지에 따라 처리가 달라짐
+      const isMyProfile = loggedInUsername === pageUsername;
+
+      // 팔로워 목록에서 토글한건지, 팔로잉 목록에서 토글한건지
+      if (type === 'followings') {
+        // 버튼 상태를 반대로 변경
+        updateFollowButton($button, following);
+        if (isMyProfile) {
+          // 팔로잉 목록에서 해당 유저를 제거
+          $button.closest('.user-item').remove();
+          updateFollowingCount(-1);
+        }
+      } else {  // 팔로워 목록에서
+        // 버튼 상태를 반대로 변경
+        updateFollowButton($button, following);
+        if (isMyProfile) {   // 팔로잉 수를 제어
+          updateFollowingCount(following ? 1 : -1);
+        }
+      }
+    });
   });
 }
 

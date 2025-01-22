@@ -1,5 +1,7 @@
 package com.example.instagramclone.service;
 
+import com.example.instagramclone.domain.follow.dto.response.FollowResponse;
+import com.example.instagramclone.domain.follow.dto.response.FollowStatus;
 import com.example.instagramclone.domain.follow.entity.Follow;
 import com.example.instagramclone.domain.member.entity.Member;
 import com.example.instagramclone.exception.ErrorCode;
@@ -11,7 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.example.instagramclone.domain.follow.dto.response.FollowStatus.*;
 
 @Service
 @Transactional
@@ -60,6 +66,37 @@ public class FollowService {
                 "followerCount", followRepository.countFollowByType(followerId, "follower")
         );
     }
+
+
+    // 특정 유저의 팔로잉 / 팔로워 목록 조회
+    @Transactional(readOnly = true)
+    public List<FollowResponse> getFollows(String targetUsername, String loginUsername, FollowStatus type) {
+
+        Member foundMember = getMember(targetUsername);
+        Member loginMember = getMember(loginUsername);
+
+
+        if (type == FOLLOWER) {
+            return followRepository.findFollowList(foundMember.getId(), FOLLOWER.name().toLowerCase())
+                    .stream()
+                    .map(follow -> FollowResponse.of(
+                            follow
+                            , followRepository.doesFollowExist(follow.getFollowing().getId(), loginMember.getId())
+                            , FOLLOWER
+                    ))
+                    .collect(Collectors.toList());
+        } else {
+            return followRepository.findFollowList(foundMember.getId(), FOLLOWING.name().toLowerCase())
+                    .stream()
+                    .map(follow -> FollowResponse.of(
+                            follow
+                            , followRepository.doesFollowExist(follow.getFollower().getId(), loginMember.getId())
+                            , FOLLOWING
+                    ))
+                    .collect(Collectors.toList());
+        }
+    }
+
 
     private Member getMember(String username) {
         return memberRepository.findByUsername(username).orElseThrow(

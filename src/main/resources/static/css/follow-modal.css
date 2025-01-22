@@ -1,0 +1,132 @@
+.follow-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.follow-modal .modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+.follow-modal .modal-content {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  width: 400px;
+  min-height: 400px;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.follow-modal .modal-header {
+  position: relative;
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.follow-modal .modal-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.follow-modal .modal-close {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.follow-modal .modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.follow-modal .user-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+}
+
+.follow-modal .user-profile {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 12px;
+}
+
+.follow-modal .user-profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.follow-modal .user-info {
+  flex: 1;
+  min-width: 0; /* flex-item 내부의 텍스트 오버플로우 방지 */
+  display: flex; /* 수직 정렬을 위한 flex 설정 */
+  flex-direction: column; /* 사용자명과 이름을 세로로 배치 */
+  justify-content: center; /* 세로 중앙 정렬 */
+}
+
+.follow-modal .username {
+  color: #262626;
+  font-weight: 600;
+  text-decoration: none;
+  width: fit-content; /* 텍스트 길이만큼만 너비 차지 */
+  margin-bottom: 2px;
+}
+
+.follow-modal .name {
+  color: #8e8e8e;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.follow-modal .follow-button {
+  padding: 7px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.follow-modal .follow-button.following {
+  background: none;
+  border: 1px solid #dbdbdb;
+  color: #262626;
+}
+
+.follow-modal .follow-button:not(.following) {
+  background: #0095f6;
+  border: none;
+  color: white;
+}
+
+.follow-button.following.unfollow-hover {
+  border-color: #ed4956;
+  color: #ed4956;
+}

@@ -5,16 +5,41 @@ import { fetchWithAuth } from "../util/api.js";
 import { createComment } from "./comment.js";
 import { openModal as openDetailModal } from "./feed-detail-modal.js";
 
+// 무한스크롤을 위한 변수
+let currentPage = 1;
+let isLoading = false;
+let hasNextPage = true;
+
 // 피드가 들어갈 전체영역
 const $feedContainer = document.querySelector('.feed-container');
+// 로딩 스피너
+const $loadingSpinner = document.querySelector('.loader-spinner');
 
 // 피드를 서버로부터 불러오는 함수
 async function fetchFeeds() {
 
+  if (!hasNextPage || isLoading) return;
+
+  isLoading = true;
+  // 로딩 아이콘을 활성화
+  $loadingSpinner.style.display = 'block';
+
+  // 강제로 1초간의 로딩을 추가
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
   // 서버 요청시 토큰을 헤더에 포함해서 요청해야 함
-  const response = await fetchWithAuth('/api/posts');
+  const response = await fetchWithAuth(`/api/posts?page=${currentPage}&size=5`);
   if (!response.ok) alert('피드 목록을 불러오는데 실패했습니다.');
-  return await response.json();
+  const { feedList, hasNext } = await response.json();
+
+  // 다음페이지 상태 업데이트
+  hasNextPage = hasNext;
+  currentPage++;
+  isLoading = false;
+
+  $loadingSpinner.style.display = 'none';
+
+  return { feedList };
 }
 
 // 해시태그만 추출해서 링크로 감싸기
@@ -284,15 +309,41 @@ async function renderFeed() {
   console.log(feedList);
 
   // feed html 생성
-  $feedContainer.innerHTML = feedList.map((feed) => createFeedItem(feed)).join('');
+  $feedContainer.innerHTML += feedList.map((feed) => createFeedItem(feed)).join('');
 
   applyNewFeedProcess(feedList);
-  
+
+}
+
+// 무한스크롤 처리 함수
+function initInfiniteScroll() {
+
+  // 무한스크롤 옵저버 생성
+  const observer = new IntersectionObserver((entries) => { 
+    // entries : 감시대상들의 집합배열
+    if (entries[0].isIntersecting && hasNextPage && !isLoading) { // 감시대상이 감지되었을 때 실행
+      // console.log('로딩이 감지됨!');
+
+      // 새로운 데이터 가져와서 화면에 렌더링
+      renderFeed();
+
+      // 더이상 불러올 게시물이 없으면 감시 해제 및 로딩 UI 제거
+      if (!hasNextPage) {
+        observer.disconnect();
+        $loadingSpinner.parentElement.remove();
+      }
+    }
+  });
+
+  // 로딩 아이콘을 감시하도록 지시
+  observer.observe($loadingSpinner.parentElement);
 }
 
 // 외부에 노출시킬 피드관련 함수
 function initFeed() {
   renderFeed();
+  // 무한 스크롤 이벤트 처리
+  initInfiniteScroll();
 }
 
 export default initFeed;

@@ -117,8 +117,10 @@ function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, i
   //   return imgTag;
   // };
 
-  return `
-    <article class="post" data-post-id="${feedId}">
+  const $article = document.createElement('article');
+  $article.classList.add('post');
+  $article.dataset.postId = feedId;
+  $article.innerHTML = `
       <div class="post-header">
         <div class="post-user-info">
           <div class="post-profile-image">
@@ -229,8 +231,9 @@ function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, i
           <button type="submit" class="comment-submit-btn" disabled>게시</button>
         </form>
       </div>
-    </article>
   `;
+
+  return $article;
 }
 
 // 이미지 캐러셀 부여하기
@@ -309,7 +312,10 @@ async function renderFeed() {
   console.log(feedList);
 
   // feed html 생성
-  $feedContainer.innerHTML += feedList.map((feed) => createFeedItem(feed)).join('');
+  feedList.map((feed) => createFeedItem(feed))
+    .forEach($article => {
+      $feedContainer.append($article);
+    });
 
   applyNewFeedProcess(feedList);
 

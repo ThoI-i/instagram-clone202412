@@ -37,6 +37,7 @@ public class PostService {
     private final MemberRepository memberRepository; // 사용자 정보 가져오기
     private final PostLikeRepository postLikeRepository; // 좋아요 정보 가져오기
     private final CommentRepository commentRepository; // 댓글 정보 가져오기
+    private final FollowRepository followRepository; // 팔로우 정보
 
     private final FileUploadUtil fileUploadUtil; // 로컬서버에 이미지 저장
     private final HashtagUtil hashtagUtil; // 해시태그 추출기
@@ -55,8 +56,17 @@ public class PostService {
         Member foundMember = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
+
+        // 이 유저가 팔로잉 수가 하나라도 있는지 체크
+        boolean hasFollowing
+                = followRepository.countFollowByType(foundMember.getId(), "following") > 0;
+
+        List<Post> posts = hasFollowing
+                ? postRepository.findFeedPosts(foundMember.getId(), offset, size + 1)
+                : postRepository.findRecommendedPosts(offset, size + 1);
+
         // 전체 피드 조회 - 사이즈를 하나 더 크게 조회하여 다음 데이터가 있는지 체크
-        List<PostResponse> feedList = postRepository.findAll(offset, size + 1)
+        List<PostResponse> feedList = posts
                 .stream()
                 .map(feed -> {
                     LikeStatusResponse likeStatus = LikeStatusResponse.of(

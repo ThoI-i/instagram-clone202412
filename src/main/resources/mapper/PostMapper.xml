@@ -134,4 +134,64 @@
         ORDER BY pi.image_order
     </select>
 
+    <!-- 팔로잉 기반 피드 조회 -->
+    <select id="findFeedPosts" resultMap="PostResultMap">
+        SELECT
+        p.*,
+        u.username,
+        u.profile_image_url,
+        pi.id AS image_id,
+        pi.image_url,
+        pi.image_order
+        FROM (
+        SELECT p.id
+        FROM posts p
+        WHERE p.member_id IN (
+        SELECT follower_id
+        FROM follows
+        WHERE following_id = #{memberId}
+        )
+        OR p.member_id = #{memberId} -- 본인 게시물 포함
+        ORDER BY p.created_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+        ) sub
+        INNER JOIN posts p ON sub.id = p.id
+        INNER JOIN users u ON p.member_id = u.id
+        LEFT JOIN post_images pi ON p.id = pi.post_id
+        ORDER BY p.created_at DESC, pi.image_order ASC;
+    </select>
+
+
+    <!-- 추천 피드 조회 (팔로잉이 없는 경우) -->
+    <select id="findRecommendedPosts" resultMap="PostResultMap">
+        SELECT
+        p.*,
+        u.username,
+        u.profile_image_url,
+        pi.id AS image_id,
+        pi.image_url,
+        pi.image_order,
+        sub.like_count,
+        sub.comment_count
+        FROM (
+        SELECT p.id,
+        COUNT(DISTINCT l.id) AS like_count,    -- 좋아요 수
+        COUNT(DISTINCT c.id) AS comment_count  -- 댓글 수
+        FROM posts p
+        LEFT JOIN post_likes l ON p.id = l.post_id
+        LEFT JOIN comments c ON p.id = c.post_id
+        WHERE p.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) -- 최근 1주일 게시물
+        GROUP BY p.id, p.created_at
+        ORDER BY (COUNT(DISTINCT l.id) + COUNT(DISTINCT c.id)) DESC, -- 인기도 순
+        p.created_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+        ) sub
+        INNER JOIN posts p ON sub.id = p.id
+        INNER JOIN users u ON p.member_id = u.id
+        LEFT JOIN post_images pi ON p.id = pi.post_id
+        ORDER BY p.created_at DESC, pi.image_order ASC;
+    </select>
+
+
+
 </mapper>

@@ -35,4 +35,17 @@ public interface PostRepository {
     // 단일 피드 상세조회
     Optional<Post> findPostDetailById(Long postId);
 
+    // 팔로잉 기반 피드 조회
+    List<Post> findFeedPosts(
+            @Param("memberId") Long memberId,
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
+    // 팔로잉이 없는 경우를 위한 추천 피드 조회
+    List<Post> findRecommendedPosts(
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
 }

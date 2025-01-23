@@ -359,6 +359,20 @@
     color: #262626;
 }
 
+/* 무한스크롤 로더 */
+.feed-loader {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.loader-spinner {
+    color: #8e8e8e;
+    font-size: 24px;
+}
+
+
 /* 반응형 스타일 */
 @media (max-width: 640px) {
     .feed-container {

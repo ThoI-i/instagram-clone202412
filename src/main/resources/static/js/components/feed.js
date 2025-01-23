@@ -1,5 +1,4 @@
 
-
 import CarouselManager from "../ui/CarouselManager.js";
 import PostLikeManager from "../ui/PostLikeManager.js";
 import { fetchWithAuth } from "../util/api.js";
@@ -45,14 +44,14 @@ export function formatDate(dateString) {
   if (diff < 60 * 60 * 24 * 7) return `${Math.floor(diff / (60 * 60 * 24))}일 전`;
 
   return new Intl.DateTimeFormat(
-    'ko-KR',
+    'ko-KR', 
     {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     }
   ).format(date);
-
+  
 }
 
 // 텍스트 길이에 따른 더보기 처리 함수
@@ -85,7 +84,7 @@ function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, i
 
   const { liked, likeCount } = likeStatus;
 
-  // const makeImageTags = (images) => {
+  // const makeImageTags = (images) => { 
   //   let imgTag = '';
   //   for (const img of images) {
   //     imgTag += `<img src="${img.imageUrl}">`;
@@ -150,7 +149,7 @@ function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, i
           }
         </div>
       </div>
-
+      
       <div class="post-actions">
         <div class="post-buttons">
           <div class="post-buttons-left">
@@ -172,7 +171,7 @@ function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, i
           좋아요 <span class="likes-count">${likeCount}</span>개
         </div>
       </div>
-
+      
 
       <div class="post-content">
         <div class="post-text">
@@ -184,7 +183,7 @@ function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, i
             ${formatDate(createdAt)}
         </div>
       </div>
-
+      
       <div class="post-comments">
 
           <!-- 댓글이 있을 때만 버튼 표시 -->
@@ -209,42 +208,35 @@ function createFeedItem({ feed_id: feedId, username, profileImageUrl, content, i
   `;
 }
 
-
-// 피드 렌더링 함수
-async function renderFeed() {
-  // 피드 데이터를 서버로부터 불러오기
-  const feedList = await fetchFeeds();
-  console.log(feedList);
-
-  // feed html 생성
-  $feedContainer.innerHTML = feedList.map((feed) => createFeedItem(feed)).join('');
-
+// 이미지 캐러셀 부여하기
+function initCarousel($feed) {
   // 각 피드의 이미지 슬라이드에 각각 캐러셀 객체를 적용
-  // 1. 피드의 모든 캐러셀 컨테이너를 가져옴
-  const $caroulselContainerList = [...document.querySelectorAll('.carousel-container')];
+  // 1. 특정 피드의 캐러셀 컨테이너를 가져옴
+  const $carousel = $feed.querySelector('.carousel-container');
 
-  // 2. 각각 캐러셀매니저를 걸어줌
-  $caroulselContainerList.forEach($carousel => {
+  // 2. 캐러셀매니저를 걸어줌
+  // 이미지가 단 한개인 슬라이드에서는 이전, 다음버튼이 없어서 에러가 나는 상황
+  const $images = $carousel.querySelectorAll('.carousel-track img');
 
-    // 이미지가 단 한개인 슬라이드에서는 이전, 다음버튼이 없어서 에러가 나는 상황
-    const $images = [...$carousel.querySelectorAll('.carousel-track img')];
+  // 이미지가 2개 이상인 슬라이드만 캐러셀 생성
+  if ($images.length >= 2) {
+    const carouselManager = new CarouselManager($carousel);
+    // 3. 초기 이미지파일 리스트를 보내줘야 함
+    // - 현재 렌더링이 모두 되어있는 상황: 이벤트만 걸어주면 되는 상황
+    carouselManager.initWithImgTag($images);
+  }
+}
 
-    // 이미지가 2개 이상인 슬라이드만 캐러셀 생성
-    if ($images.length >= 2) {
-      const carouselManager = new CarouselManager($carousel);
-      // 3. 초기 이미지파일 리스트를 보내줘야 함
-      // - 현재 렌더링이 모두 되어있는 상황: 이벤트만 걸어주면 되는 상황
-      carouselManager.initWithImgTag($images);
-    }
-  });
 
-  // 더 보기 버튼 이벤트 처리
-  const $moreButtons = [...document.querySelectorAll('.more-button')];
+// 더보기 버튼 이벤트
+function initMoreButton($feed) {
+  // 더보기 버튼 이벤트 부여
+  const $moreButton = $feed.querySelector('.more-button');
 
-  $moreButtons.forEach($btn => {
-
-    $btn.addEventListener('click', e => {
-      const $captionDiv = $btn.closest('.post-text');
+  if ($moreButton) {
+    $moreButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      const $captionDiv = $moreButton.closest('.post-text');
       const $truncatedSpan = $captionDiv.querySelector('.truncated-text');
       const $fullSpan = $captionDiv.querySelector('.full-text');
 
@@ -252,26 +244,50 @@ async function renderFeed() {
         $truncatedSpan.style.display = 'none';
         $fullSpan.style.display = 'inline';
       }
-      $btn.style.display = 'none';
+      $moreButton.style.display = 'none';
     });
+  }
 
-  });
+}
 
-  // 모든 피드에 좋아요 매니저를 세팅, 댓글 등록기능을 세팅
-  $feedContainer.querySelectorAll('.post').forEach($feed => {
-    new PostLikeManager($feed);
-    createComment($feed.querySelector('.comment-form'));
+function initLikeAndComment($feed) {
+  // 모든 피드에 좋아요 기능 부여하기
+  new PostLikeManager($feed);
+  // 모든 피드에 댓글 생성 이벤트 활성화
+  createComment($feed.querySelector('.comment-form'));
+  // 댓글 말풍선버튼을 누르거나 댓글 n개보기를 누를 시 상세보기 모달이 열리게 하기
+  const postId = $feed.dataset.postId;
+  $feed
+    .querySelector('.comment-button')
+    .addEventListener('click', () => openDetailModal(postId));
+  $feed
+    .querySelector('.view-comments-button')
+    ?.addEventListener('click', () => openDetailModal(postId));
+}
 
-    // 피드 댓글 말풍선 버튼, 댓글 n개보기 버튼 클릭시 상세보기 모달이 열리게
-    const postId = $feed.dataset.postId;
-    $feed
-      .querySelector('.comment-button')
-      .addEventListener('click', () => openDetailModal(postId));
-    $feed
-      .querySelector('.view-comments-button')
-      ?.addEventListener('click', () => openDetailModal(postId));
-  });
+// 피드가 렌더링 된 이후 처리해야할 것들 (캐러셀, 좋아요, 댓글 기능 등)
+function applyNewFeedProcess(feedList) {
 
+  // 새로운 게시물들에게 기능 부여
+  feedList.forEach(({feed_id: feedId}) => { 
+    const $feed = document.querySelector(`.post[data-post-id="${feedId}"`)
+    initCarousel($feed); // 이미지슬라이드 기능
+    initMoreButton($feed); // 더보기 버튼 처리
+    initLikeAndComment($feed); // 좋아요, 댓글 기능 처리
+  }); 
+}
+
+// 피드 렌더링 함수
+async function renderFeed() {
+  // 피드 데이터를 서버로부터 불러오기
+  const { feedList } = await fetchFeeds();
+  console.log(feedList);
+
+  // feed html 생성
+  $feedContainer.innerHTML = feedList.map((feed) => createFeedItem(feed)).join('');
+
+  applyNewFeedProcess(feedList);
+  
 }
 
 // 외부에 노출시킬 피드관련 함수

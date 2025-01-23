@@ -1,18 +1,7 @@
 
-import { fetchWithAuth } from '../util/api.js';
 import { getPageUsername, isUserMatched } from './profile-page.js';
+import { toggleFollow } from '../util/api.js';
 
-
-const pageUsername = getPageUsername();
-
-// 서버에 팔로우 토글 요청을 보내기
-export async function toggleFollow(targetUsername = pageUsername) {
-  const response = await fetchWithAuth(`/api/follows/${targetUsername}`, {
-    method: 'POST',
-  });
-
-  return await response.json();
-}
 
 // 팔로우 상태에 따른 버튼 렌더링 변경
 function updateFollowButton($button, isFollowing) {
@@ -51,7 +40,9 @@ async function initFollowButton() {
   }
 
   $followButton.addEventListener('click', async (e) => {
-    const { following: isFollowing, followerCount } = await toggleFollow();
+    const pageUsername = getPageUsername();
+
+    const { following: isFollowing, followerCount } = await toggleFollow(pageUsername);
 
     // 해당 페이지 유저의 팔로워 수 갱신
     document.querySelector('.follower-count').textContent = followerCount;

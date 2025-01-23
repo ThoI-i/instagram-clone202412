@@ -25,21 +25,7 @@
 
   <!-- 추천 사용자 목록 -->
   <div class="suggestions-list">
-    <!-- 추천 사용자 아이템 -->
-    <c:forEach begin="1" end="5">
-      <div class="suggestion-item">
-        <div class="user-profile">
-          <a href="/profile" class="profile-image">
-            <img src="/images/default-profile.svg" alt="프로필 이미지">
-          </a>
-          <div class="profile-info">
-            <a href="/profile" class="username">추천사용자${i}</a>
-            <span class="follow-info">인기</span>
-          </div>
-          <button class="follow-button">팔로우</button>
-        </div>
-      </div>
-    </c:forEach>
+    
   </div>
 
   <!-- 푸터 링크 -->
@@ -61,4 +47,3 @@
     </div>
   </div>
 </div>
-

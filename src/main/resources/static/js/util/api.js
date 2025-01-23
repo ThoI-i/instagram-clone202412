@@ -1,5 +1,15 @@
 // js/util/api.js
 
+
+// 서버에 팔로우 토글 요청을 보내기
+export async function toggleFollow(targetUsername) {
+  const response = await fetchWithAuth(`/api/follows/${targetUsername}`, {
+    method: 'POST',
+  });
+
+  return await response.json();
+}
+
 // 인증 헤더를 생성하는 함수
 function createAuthHeader() {
   // 액세스 토큰을 브라우저에서 가져오기

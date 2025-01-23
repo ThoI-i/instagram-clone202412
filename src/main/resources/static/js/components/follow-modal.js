@@ -1,8 +1,7 @@
-
 import { fetchWithAuth } from "../util/api.js";
 import { getCurrentUser } from "../util/auth.js";
 import { getPageUsername } from "./profile-page.js";
-import { toggleFollow } from "./follow.js";
+import { toggleFollow } from "../util/api.js";
 
 
 const $modal = document.querySelector('.follow-modal');

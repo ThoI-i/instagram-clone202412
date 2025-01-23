@@ -44,9 +44,9 @@
         FROM users u
         WHERE u.id != #{currentUserId} -- 본인 제외
         AND u.id NOT IN ( -- 이미 팔로우한 사용자 제외
-        SELECT following_id
+        SELECT follower_id
         FROM follows
-        WHERE follower_id = #{currentUserId})
+        WHERE following_id = #{currentUserId})
         ORDER BY u.created_at DESC, -- 최근 가입한 사용자 우선
         ( -- 활동이 많은 사용자 우선
         SELECT COUNT(*)

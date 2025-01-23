@@ -26,24 +26,25 @@
         ORDER BY image_order
     </select>
 
+    <!--  전체 피드 목록 조회   -->
     <select id="findAll" resultMap="PostResultMap">
         SELECT
-        p.id
-        , p.content
-        , p.created_at
-        , u.username
-        , u.profile_image_url
-        , u.name
-        , pi.id AS image_id
-        , pi.image_url
-        , pi.image_order
+        p.*,
+        u.username,
+        u.profile_image_url,
+        pi.id AS image_id,
+        pi.image_url,
+        pi.image_order
+        FROM
+        (   SELECT p.id
         FROM posts p
-        INNER JOIN users u
-        ON u.id = p.member_id
-        INNER JOIN post_images pi
-        ON p.id = pi.post_id
-        ORDER BY
-        p.created_at DESC, p.id DESC, pi.image_order ASC
+        ORDER BY p.created_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+        ) filtered_posts
+        INNER JOIN posts p ON filtered_posts.id = p.id
+        INNER JOIN users u ON p.member_id = u.id
+        LEFT JOIN post_images pi ON p.id = pi.post_id
+        ORDER BY p.created_at DESC, pi.image_order ASC;
     </select>
 
     <resultMap id="PostResultMap" type="Post">

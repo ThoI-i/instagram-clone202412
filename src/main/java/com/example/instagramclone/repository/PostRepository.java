@@ -4,6 +4,7 @@ import com.example.instagramclone.domain.post.dto.response.ProfilePostResponse;
 import com.example.instagramclone.domain.post.entity.Post;
 import com.example.instagramclone.domain.post.entity.PostImage;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,9 @@ public interface PostRepository {
     List<PostImage> findImagesByPostId(Long postId);
 
     // 전체 피드 게시물 목록 조회
-    List<Post> findAll();
+    List<Post> findAll(
+            @Param("offset") int offset
+            , @Param("limit") int limit);
 
     // 특정 사용자의 피드 개수를 조회
     long countByMemberId(Long memberId);

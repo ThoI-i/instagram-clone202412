@@ -41,4 +41,10 @@ public interface FollowRepository {
             , @Param("type") String type
     );
 
+    // 특정 사용자를 팔로우하는 사람들 중
+    // 현재 사용자가 팔로우하는 사람들 목록 조회
+    List<String> findCommonFollowingUsernames(
+            @Param("targetUserId") Long targetUserId,
+            @Param("currentUserId") Long currentUserId
+    );
 }

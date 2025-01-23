@@ -4,6 +4,7 @@ import com.example.instagramclone.domain.member.entity.Member;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 @Mapper
@@ -22,6 +23,12 @@ public interface MemberRepository {
     void updateProfileImage(
             @Param("imageUrl") String imageUrl
             , @Param("username") String username
+    );
+
+    //  추천할 사용자 목록 조회 (팔로우하지 않은 사용자 중)
+    List<Member> findMembersToSuggest(
+            @Param("currentUserId") Long currentUserId,
+            @Param("limit") int limit
     );
 
 }

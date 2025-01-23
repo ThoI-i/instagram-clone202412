@@ -68,6 +68,20 @@
         ORDER BY f.created_at DESC
     </select>
 
+
+    <!-- 공통 팔로워 사용자 이름 조회 -->
+    <select id="findCommonFollowingUsernames" resultType="String">
+        SELECT u.username
+        FROM users u
+        WHERE u.id IN (SELECT follower_id
+        FROM follows
+        WHERE following_id = #{targetUserId})
+        AND u.id IN (SELECT follower_id
+        FROM follows
+        WHERE following_id = #{currentUserId})
+    </select>
+
+
     <!-- Follow 엔티티 매핑 설정 -->
     <resultMap id="FollowResultMap" type="Follow">
         <id property="id" column="id"/>

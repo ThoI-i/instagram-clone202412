@@ -1,0 +1,105 @@
+/* src/main/resources/static/css/hashtag-search.css */
+
+.explore-container {
+  width: 100%;
+  max-width: 935px;
+  margin-top: 40px;
+  margin-left: calc(244px + ((100% - 935px - 244px) / 2));
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.explore-container .explore-header {
+  margin-bottom: 24px;
+  align-self: flex-start;
+}
+
+.explore-container .hashtag-info h1 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+
+}
+
+.explore-container .hashtag-stats {
+  font-size: 16px;
+  color: #262626;
+}
+
+.explore-container .post-count {
+  font-weight: 600;
+}
+
+.explore-container .posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.explore-container .grid-item {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  cursor: pointer;
+}
+
+.explore-container .grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.explore-container .grid-item:hover .grid-item-overlay {
+  opacity: 1;
+}
+
+.explore-container .grid-item-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.explore-container .grid-item-stats {
+  display: flex;
+  gap: 30px;
+  color: white;
+  font-weight: 600;
+}
+
+.explore-container .grid-item-stats span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.explore-container .grid-loader {
+  padding: 20px;
+  text-align: center;
+  margin: 30px auto;
+}
+
+.explore-container .spinner {
+  color: #8e8e8e;
+  font-size: 32px;
+}
+
+@media (max-width: 735px) {
+  .explore-container {
+      margin-left: 72px;
+      padding: 20px 0;
+  }
+
+  .explore-container .posts-grid {
+      gap: 3px;
+  }
+}

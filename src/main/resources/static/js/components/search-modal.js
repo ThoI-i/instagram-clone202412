@@ -236,6 +236,39 @@ function renderResults(results) {
 }
 
 
+// 해시태그 검색결과 렌더링
+function renderHashtagResults(hashtags) {
+  if (!hashtags.length) {
+    $resultList.innerHTML = `<div class="no-results">검색 결과가 없습니다.</div>`;
+    return;
+  }
+
+  $resultList.innerHTML = hashtags
+    .map(
+      (tag) => `
+    <div class="search-result-item hashtag-item" data-tag="${tag.hashtag}">
+      <div class="hashtag-symbol">#</div>
+      <div class="hashtag-info">
+        <div class="hashtag-name">${tag.hashtag}</div>
+        <div class="post-count">게시물 ${tag.feedCount}개</div>
+      </div>
+    </div>
+  `
+    )
+    .join('');
+
+  // 해시태그 클릭 이벤트
+  $resultList.querySelectorAll('.hashtag-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const tag = item.dataset.tag;
+      window.location.href = `/explore/search/keyword/?q=${tag}`;
+    });
+  });
+}
+
+
+
+
 // 검색 처리 수행
 async function search(inputValue) {
 
@@ -246,15 +279,23 @@ async function search(inputValue) {
   await new Promise(resolve => setTimeout(resolve, 1500));
 
   // 서버 통신
-  const response = await fetchWithAuth(
-    `/api/search/members?keyword=${inputValue}`
-  );
+  let response;
+  let results;
 
-  const results = await response.json();
-  // console.log(results);
-
-  renderResults(results); // 검색결과 렌더링
-  
+  if (inputValue.startsWith('#')) {
+    console.log('val: ', inputValue);
+    
+    // 해시태그 검색
+    response = await fetchWithAuth(`/api/hashtags/search?keyword=${inputValue.substring(1)}`);
+    results = await response.json();
+    renderHashtagResults(results);
+  } else {
+    // 사용자 검색
+    response = await fetchWithAuth(`/api/search/members?keyword=${inputValue}`);
+    results = await response.json();
+    // console.log(results);
+    renderResults(results); // 사용자 검색결과 렌더링
+  }
 
   // 스켈레톤 숨기기
   hideSkeletonLoading();

@@ -17,21 +17,126 @@ const $resultList = $modal.querySelector('.search-result-list');
 const $recentSearch = $modal.querySelector('.recent-searches');
 
 
+// 최근 검색어 개별삭제
+function removeRecentSearch(username) { 
+  const searches = getRecentSearches();
+  const filtered = searches.filter(item => item.username !== username);
+  localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(filtered));
+}
+
+// 최근 검색어 전체삭제
+function clearRecentSearches() {
+  localStorage.removeItem(RECENT_SEARCHES_KEY);
+}
+
+// 최근 검색어 목록 렌더링
+function renderRecentSearches() {
+  const searches = getRecentSearches();
+
+  if (searches.length === 0) {
+    $recentSearch.innerHTML = `
+            <div class="results-header">
+                <h3>최근 검색 항목</h3>
+            </div>
+            <div class="no-results">
+                최근 검색 내역 없음
+            </div>
+        `;
+    return;
+  }
+
+  $recentSearch.innerHTML = `
+        <div class="results-header">
+            <h3>최근 검색 항목</h3>
+            <button type="button" class="clear-all-button">모두 지우기</button>
+        </div>
+        <div class="recent-searches-list">
+            ${searches
+              .map(
+                (item) => `
+                <div class="search-result-item">
+                    <div class="user-profile">
+                        <img src="${
+                          item.profileImageUrl || '/images/default-profile.svg'
+                        }" 
+                             alt="${item.username}의 프로필">
+                    </div>
+                    <div class="user-info">
+                        <div class="username">${item.username}</div>
+                        <div class="name">${item.name}</div>
+                    </div>
+                    <button type="button" class="remove-search" data-username="${
+                      item.username
+                    }">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            `
+              )
+              .join('')}
+        </div>
+    `;
+
+  // 모두 지우기
+  const $clearAllBtn = $recentSearch.querySelector('.clear-all-button');
+  $clearAllBtn.addEventListener('click', () => {
+    clearRecentSearches();
+    renderRecentSearches();
+  });
+
+  // 개별 삭제 버튼
+  $recentSearch.querySelectorAll('.remove-search').forEach(($btn) => {
+    $btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const username = $btn.dataset.username;
+      removeRecentSearch(username);
+      renderRecentSearches();
+    });
+  });
+
+  // 검색 결과 클릭 시 프로필 페이지로 이동
+  $recentSearch.querySelectorAll('.search-result-item').forEach(($item) => {
+    $item.addEventListener('click', () => {
+      const username = $item.querySelector('.username').textContent;
+      window.location.href = `/${username}`;
+    });
+  });
+}
+
+
+
+
+// 로컬스토리지에 저장된 최근 검색결과 배열을 불러오기
+function getRecentSearches() {
+  const savedSearches = localStorage.getItem(RECENT_SEARCHES_KEY);
+  return savedSearches ? JSON.parse(savedSearches) : [];
+}
+
 // 사용자가 클릭한 검색결과 유저정보를 JSON으로 로컬스토리지에 저장
 function addRecentSearch(user) {
 
-  const searches = [];
+  // 기존에 로컬스토리지에 저장된 배열을 불러오기
+  const searches = getRecentSearches();
+
+  // 이미 저장된 항목이면 제거하고 새로 추가
+  const filtered = searches.filter(item => item.username !== user.username);
 
   // 새항목을 배열의 맨 앞에 추가
-  searches.unshift({
+  filtered.unshift({
     username: user.username,
     name: user.name,
     profileImageUrl: user.profileImageUrl,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 
+  // 최대 개수를 유지
+  if (filtered.length > MAX_RECENT_SEARCHES) {
+    // 제일 오래된 검색기록을 제거
+    filtered.pop();
+  }
+
   // 로컬스토리지에 저장
-  localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(searches));
+  localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(filtered));
 }
 
 
@@ -48,6 +153,7 @@ function closeModal() {
   document.body.style.overflow = '';
 
   $searchInput.value = ''; // 검색어 지우기
+  showRecentSearches();
 }
 
 // 검색창 모달 열기
@@ -196,4 +302,5 @@ function bindEvents() {
 
 export default function initSearchModal() {
   bindEvents();
+  renderRecentSearches();
 }

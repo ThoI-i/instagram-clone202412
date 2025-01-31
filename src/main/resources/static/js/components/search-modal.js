@@ -1,4 +1,5 @@
 import { debounce } from "../util/debounce.js";
+import { fetchWithAuth } from '../util/api.js';
 
 
 const $modal = document.querySelector('.search-modal');
@@ -42,6 +43,54 @@ function hideSkeletonLoading() {
 }
 
 
+
+// 검색결과 HTML생성
+function createResultItem(user) {
+  return `
+        <div class="search-result-item" data-username="${user.username}">
+            <div class="user-profile">
+                <img src="${user.profileImageUrl || '/images/default-profile.svg'}" 
+                     alt="${user.username}의 프로필">
+            </div>
+            <div class="user-info">
+                <div class="username">${user.username}</div>
+                <div class="name">${user.name}</div>
+                ${user.commonFollowers.length ? `
+                    <div class="mutual-follows">
+                        ${user.commonFollowers[0]}님${user.commonFollowers.length > 1 ?
+    ` 외 ${user.commonFollowers.length - 1}명` : ''}이 팔로우합니다
+                    </div>
+                ` : ''}
+            </div>
+        </div>
+    `;
+}
+
+
+// 검색결과 렌더링하기
+function renderResults(results) {
+  if (!results.length) {
+    $resultList.innerHTML = `
+            <div class="no-results">
+                검색 결과가 없습니다.
+            </div>
+        `;
+    return;
+  }
+
+  $resultList.innerHTML = results.map(createResultItem).join('');
+
+  // 검색 결과 클릭시 해당 프로필로 이동
+  $resultList.querySelectorAll('.search-result-item').forEach($item => {
+    $item.addEventListener('click', () => {
+      const username = $item.dataset.username;
+      window.location.href = `/${username}`;
+    });
+  });
+
+}
+
+
 // 검색 처리 수행
 async function search(inputValue) {
 
@@ -52,6 +101,15 @@ async function search(inputValue) {
   await new Promise(resolve => setTimeout(resolve, 1500));
 
   // 서버 통신
+  const response = await fetchWithAuth(
+    `/api/search/members?keyword=${inputValue}`
+  );
+
+  const results = await response.json();
+  // console.log(results);
+
+  renderResults(results); // 검색결과 렌더링
+  
 
   // 스켈레톤 숨기기
   hideSkeletonLoading();

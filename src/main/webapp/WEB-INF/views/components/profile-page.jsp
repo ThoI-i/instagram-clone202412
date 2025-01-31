@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="/css/feed-detail-modal.css">
     <link rel="stylesheet" href="/css/like.css">
     <link rel="stylesheet" href="/css/follow-modal.css">
+    <link rel="stylesheet" href="/css/search-modal.css">
 
     <!-- JavaScript -->
     <script src="/js/components/profile-page.js" type="module" defer></script>
@@ -106,6 +107,7 @@
 
     <%@ include file="./create-post-modal.jsp" %>
     <%@ include file="./feed-detail-modal.jsp" %>
+    <%@ include file="./search-modal.jsp" %>
 
     <!-- 팔로워/팔로잉 모달 -->
     <div class="follow-modal" style="display: none;">

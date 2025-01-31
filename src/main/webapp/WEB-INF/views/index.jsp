@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="/css/modal.css">
     <link rel="stylesheet" href="/css/like.css">
     <link rel="stylesheet" href="/css/feed-detail-modal.css">
+    <link rel="stylesheet" href="/css/search-modal.css">
 
     <!-- Modular JS -->
     <script src="/js/index.js" type="module" defer></script>
@@ -45,6 +46,7 @@
 
     <%@ include file="components/create-post-modal.jsp" %> <!-- 모달 섹션 -->
     <%@ include file="components/feed-detail-modal.jsp" %> <!-- 상세보기 모달 섹션 -->
+    <%@ include file="components/search-modal.jsp" %> <!-- 검색창 모달 섹션 -->
 </div>
 </body>
 </html>

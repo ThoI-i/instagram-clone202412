@@ -1,6 +1,10 @@
 import { debounce } from "../util/debounce.js";
 import { fetchWithAuth } from '../util/api.js';
 
+// 최근 검색어 기록
+const RECENT_SEARCHES_KEY = 'recentSearches';
+const MAX_RECENT_SEARCHES = 5;  // 최대 5개까지
+
 
 const $modal = document.querySelector('.search-modal');
 const $backdrop = document.querySelector('.search-modal-backdrop');
@@ -11,6 +15,31 @@ const $clearBtn = $modal.querySelector('.clear-button');
 const $skeletonLoading = $modal.querySelector('.skeleton-loading');
 const $resultList = $modal.querySelector('.search-result-list');
 const $recentSearch = $modal.querySelector('.recent-searches');
+
+
+// 사용자가 클릭한 검색결과 유저정보를 JSON으로 로컬스토리지에 저장
+function addRecentSearch(user) {
+
+  const searches = [];
+
+  // 새항목을 배열의 맨 앞에 추가
+  searches.unshift({
+    username: user.username,
+    name: user.name,
+    profileImageUrl: user.profileImageUrl,
+    timestamp: new Date().toISOString()
+  });
+
+  // 로컬스토리지에 저장
+  localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(searches));
+}
+
+
+// 최근 검색 결과 창 띄우기
+function showRecentSearches() {
+  $recentSearch.style.display = 'block';
+  $resultList.style.display = 'none';
+}
 
 // 검색창 모달 닫기
 function closeModal() {
@@ -80,10 +109,20 @@ function renderResults(results) {
 
   $resultList.innerHTML = results.map(createResultItem).join('');
 
+
+  // console.log(results);
+
   // 검색 결과 클릭시 해당 프로필로 이동
   $resultList.querySelectorAll('.search-result-item').forEach($item => {
     $item.addEventListener('click', () => {
       const username = $item.dataset.username;
+
+      // 사용자계정명으로 배열에서 해당 사용자객체 찾기
+      const foundUser = results.find(user => user.username === username);
+
+      // 클릭한 유저정보를 로컬스토리지 최근 검색어에 추가
+      addRecentSearch(foundUser);
+
       window.location.href = `/${username}`;
     });
   });
@@ -139,6 +178,8 @@ function bindEvents() {
 
     if (inputValue) {
       search(inputValue);
+    } else {
+      showRecentSearches();
     }
   }, 500));
 
@@ -146,6 +187,7 @@ function bindEvents() {
   $clearBtn.addEventListener('click', () => { 
     $searchInput.value = '';
     $clearBtn.style.display = 'none';
+    showRecentSearches();
     $searchInput.focus();
   });
   

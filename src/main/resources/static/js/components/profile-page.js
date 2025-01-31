@@ -6,6 +6,7 @@ import { getCurrentUser } from '../util/auth.js';
 import initFeedDetailModal from './feed-detail-modal.js';
 import initFollow from './follow.js';
 import initFollowModal from './follow-modal.js';
+import initSearchModal from './search-modal.js';
 
 
 const $profileImageContainer = document.querySelector(
@@ -85,10 +86,10 @@ async function renderProfileHeader({
                       </button>`
                     : `<button class="follow-button">팔로우</button>`
                 }
-                
+
                 <button class="message-button">메시지 보내기</button>
             `;
-    
+
     const $button = document.querySelector('.following-button');
     if (isFollowing) {
       // 마우스 오버 시 언팔로우로 텍스트 변경
@@ -105,7 +106,7 @@ async function renderProfileHeader({
       $button.onmouseover = null;
       $button.onmouseout = null;
     }
-    
+
   }
 }
 
@@ -136,7 +137,7 @@ function renderProfileFeeds(feedList) {
                 <div class="grid-item-overlay">
                     <div class="grid-item-stats">
                         <span>
-                            <i class="fa-solid fa-heart"></i> 
+                            <i class="fa-solid fa-heart"></i>
                             <span class="grid-likes-count">${feed.likeCount}</span>
                         </span>
                         <span>
@@ -235,6 +236,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initCreateFeedModal(); // 피드생성 관련 js
   initMoreMenu(); // 더보기 버튼 클릭 관련
   initSideBar(); // 사이드바 관련
+  initSearchModal(); // 검색창 모달
 
   //===== 프로필 페이지 개별 처리 ===== //
   await initProfileHeader(); // 프로필 페이지 헤더 관련

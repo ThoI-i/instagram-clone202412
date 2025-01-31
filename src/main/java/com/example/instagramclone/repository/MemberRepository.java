@@ -31,4 +31,7 @@ public interface MemberRepository {
             @Param("limit") int limit
     );
 
+    // 검색어 기반 회원 검색
+    List<Member> searchMembers(String keyword);
+
 }

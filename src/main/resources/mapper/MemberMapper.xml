@@ -56,5 +56,14 @@
         LIMIT #{limit}
     </select>
 
+    <!--    검색어 기반 회원 조회  -->
+    <select id="searchMembers">
+        SELECT *
+        FROM users
+        WHERE username LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY username
+        LIMIT 5
+    </select>
+
 
 </mapper>

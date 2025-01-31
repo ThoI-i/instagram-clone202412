@@ -193,6 +193,9 @@ function updateFeedNavigation(currentId) {
 
 // 모달 열기
 export async function openModal(postId) {
+
+  console.log('postId: ', postId);
+  
   
   // 서버에 데이터 요청
   const response = await fetchWithAuth(`/api/posts/${postId}`);
@@ -248,12 +251,12 @@ function initFeedDetailModal() {
   // 나중에 이 모달은 index페이지에서도 재활용되는데
   // index페이지에는 gridContainer가 없다.
   if ($gridContainer) {
-    $gridContainer.addEventListener('click', (e) => {
+    $gridContainer.addEventListener('click', async (e) => {
       const $gridItem = e.target.closest('.grid-item');
       // console.log($gridItem);
       const postId = $gridItem.dataset.postId;
 
-      openModal(postId);
+      await openModal(postId);
     });
   }
 

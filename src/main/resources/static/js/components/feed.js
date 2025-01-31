@@ -47,7 +47,8 @@ export function convertHashtagsToLinks(content) {
   // #으로 시작하고 공백이나 줄바꿈으로 끝나는 문자열 찾기
   return content.replace(
     /#[\w가-힣]+/g,
-    (match) => `<a href="#" class="hashtag">${match}</a>`
+    (match) =>
+      `<a href="/explore/search/keyword/?q=${match.substring(1)}" class="hashtag">${match}</a>`
   );
 }
 

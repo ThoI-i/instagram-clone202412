@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="/css/search-modal.css">
     <link rel="stylesheet" href="/css/hashtag-search.css">
 
-    <script src="/js/pages/hashtag-search-page.js" type="module" defer></script>
+    <script src="/js/components/hashtag-search-page.js" type="module" defer></script>
 </head>
 <body>
 <div class="container">

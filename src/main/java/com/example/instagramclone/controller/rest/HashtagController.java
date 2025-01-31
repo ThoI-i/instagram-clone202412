@@ -1,14 +1,13 @@
-package com.example.instagramclone.controller.rest;
+ckage com.example.instagramclone.controller.rest;
 
 import com.example.instagramclone.domain.hashtag.dto.response.HashtagSearchResponse;
+import com.example.instagramclone.domain.post.dto.response.FeedResponse;
+import com.example.instagramclone.domain.post.dto.response.ProfilePostResponse;
 import com.example.instagramclone.service.HashtagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,4 +30,16 @@ public class HashtagController {
                 .body(responses);
     }
 
+    // 해시태그 기반 피드 목록요청
+    @GetMapping("/{tagName}/posts")
+    public ResponseEntity<FeedResponse<ProfilePostResponse>> getPostsByHashtag(
+            @PathVariable String tagName
+            , @RequestParam(defaultValue = "1") int page
+            , @RequestParam(defaultValue = "6") int size
+    ) {
+        return ResponseEntity.ok()
+                .body(hashtagService.getPostsByHashtag(
+                        tagName, page, size
+                ));
+    }
 }

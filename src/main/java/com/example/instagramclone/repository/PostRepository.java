@@ -32,6 +32,12 @@ public interface PostRepository {
     // 특정 사용자의 프로필 페이지 전용 피드 목록 조회
     List<ProfilePostResponse> findProfilePosts(Long memberId);
 
+    // 특정 해시태그 페이지 전용 피드 목록 조회
+    List<ProfilePostResponse> findPostsByHashtag(
+            @Param("tagName") String tagName
+            , @Param("offset") int offset
+            , @Param("limit") int limit
+    );
     // 단일 피드 상세조회
     Optional<Post> findPostDetailById(Long postId);
 

@@ -1,9 +1,12 @@
 package com.example.instagramclone.service;
 
 import com.example.instagramclone.domain.hashtag.dto.response.HashtagSearchResponse;
+import com.example.instagramclone.domain.post.dto.response.FeedResponse;
+import com.example.instagramclone.domain.post.dto.response.ProfilePostResponse;
 import com.example.instagramclone.exception.ErrorCode;
 import com.example.instagramclone.exception.PostException;
 import com.example.instagramclone.repository.HashtagRepository;
+import com.example.instagramclone.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ import java.util.List;
 public class HashtagService {
 
     private final HashtagRepository hashtagRepository;
+    private final PostRepository postRepository;
 
     // 해시태그 추천 목록 불러오기 중간처리
     @Transactional(readOnly = true)  // 조회 최적화 - 갱신에 대한 준비를 하지 않아서 리소스가 낭비되지 않음
@@ -36,5 +40,17 @@ public class HashtagService {
         keyword = keyword.startsWith("#") ? keyword.substring(1) : keyword;
 
         return hashtagRepository.searchHashtagsByKeyword(keyword);
+    }
+    // 해시태그 피드 목록 불러오기
+    public FeedResponse<ProfilePostResponse> getPostsByHashtag(String tagName, int page, int size) {
+        int offset = (page - 1) * size;
+        List<ProfilePostResponse> hashtagFeedList
+                = postRepository.findPostsByHashtag(tagName, offset, size + 1);
+        // 다음페이지가 있는지 여부
+        boolean hasNext = hashtagFeedList.size() > size;
+        if (hasNext) {
+            hashtagFeedList.remove(hashtagFeedList.size() - 1);
+        }
+        return FeedResponse.of(hashtagFeedList, hasNext);
     }
 }

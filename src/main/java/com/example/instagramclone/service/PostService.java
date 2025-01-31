@@ -44,7 +44,7 @@ public class PostService {
 
     // 피드 목록조회 중간처리
     @Transactional(readOnly = true)
-    public FeedResponse findAllFeeds(String username, int size, int page) {
+    public FeedResponse<PostResponse> findAllFeeds(String username, int size, int page) {
 
         // offset은 size에 따라 숫자가 바뀜
         /*

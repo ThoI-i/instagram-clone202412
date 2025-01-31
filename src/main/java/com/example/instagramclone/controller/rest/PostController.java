@@ -1,8 +1,10 @@
+
 package com.example.instagramclone.controller.rest;
 
 import com.example.instagramclone.domain.post.dto.request.PostCreate;
 import com.example.instagramclone.domain.post.dto.response.FeedResponse;
 import com.example.instagramclone.domain.post.dto.response.PostDetailResponse;
+import com.example.instagramclone.domain.post.dto.response.PostResponse;
 import com.example.instagramclone.exception.ErrorCode;
 import com.example.instagramclone.exception.PostException;
 import com.example.instagramclone.service.PostService;
@@ -27,13 +29,13 @@ public class PostController {
 
     // 피드 목록 조회 요청
     @GetMapping
-    public ResponseEntity<?> getFeeds(
+    public ResponseEntity<FeedResponse<PostResponse>> getFeeds(
             @AuthenticationPrincipal String username,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "5") int size
     ) {
 
-        FeedResponse allFeeds = postService.findAllFeeds(username, size, page);
+        FeedResponse<PostResponse> allFeeds = postService.findAllFeeds(username, size, page);
 
         return ResponseEntity
                 .ok()
